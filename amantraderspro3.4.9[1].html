@@ -1,0 +1,3346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aman Traders</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:#000;color:#f5f5f7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* Apple-inspired animations - UPGRADED: 3x FASTER */
+@keyframes fadeIn{
+  from{opacity:0}to{opacity:1}
+}
+@keyframes slideUp{
+  from{opacity:0;transform:translate3d(0,12px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes slideDown{
+  from{opacity:0;transform:translate3d(0,-12px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes scaleIn{
+  from{opacity:0;transform:scale3d(0.96,0.96,1)}
+  to{opacity:1;transform:scale3d(1,1,1)}
+}
+@keyframes liquidFloat{
+  0%,100%{transform:translate3d(0,0,0);border-radius:60% 40% 30% 70%/60% 30% 70% 40%}
+  25%{transform:translate3d(0,-8px,0);border-radius:30% 60% 70% 40%/50% 60% 30% 60%}
+  50%{transform:translate3d(0,0,0);border-radius:50% 60% 30% 60%/30% 60% 70% 40%}
+  75%{transform:translate3d(0,8px,0);border-radius:60% 40% 60% 40%/70% 30% 50% 60%}
+}
+@keyframes glow{
+  0%,100%{box-shadow:0 0 30px rgba(0,122,255,0.4),0 0 60px rgba(0,122,255,0.2)}
+  50%{box-shadow:0 0 50px rgba(0,122,255,0.6),0 0 100px rgba(0,122,255,0.3)}
+}
+@keyframes spin{
+  from{transform:rotate(0deg)}to{transform:rotate(360deg)}
+}
+@keyframes shimmer{
+  0%{background-position:0% center}
+  100%{background-position:200% center}
+}
+@keyframes countUp{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* SUBTLE TEXT EFFECTS - Live & Smooth */
+@keyframes textShimmer{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes textGlow{
+  0%,100%{text-shadow:0 0 10px rgba(0,122,255,0.3)}
+  50%{text-shadow:0 0 20px rgba(0,122,255,0.5),0 0 30px rgba(0,122,255,0.3)}
+}
+@keyframes textFloat{
+  0%,100%{transform:translateY(0px)}
+  50%{transform:translateY(-2px)}
+}
+
+
+/* Premium color scheme */
+:root{
+  --primary:#007aff;
+  --primary-dark:#0051d5;
+  --secondary:#8e8e93;
+  --success:#34c759;
+  --danger:#ff3b30;
+  --warning:#ff9500;
+  --bg-dark:#1c1c1e;
+  --bg-elevated:#2c2c2e;
+  --bg-card:#3a3a3c;
+  --border:#48484a;
+  --text-primary:#f5f5f7;
+  --text-secondary:#aeaeb2;
+  --glass:rgba(28,28,30,0.8);
+  --glass-border:rgba(255,255,255,0.1);
+}
+
+/* LIQUID GLASS morphism - UPGRADED 40px */
+.glass{background:var(--glass);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border:1px solid var(--glass-border)}
+
+.app{max-width:1200px;margin:0 auto;background:var(--bg-dark);min-height:100vh;box-shadow:0 0 80px rgba(0,0,0,0.5)}
+@media(max-width:768px){.app{max-width:100%}}
+
+/* Premium header with frosted glass */
+.header{background:linear-gradient(135deg,rgba(0,122,255,0.1),rgba(0,81,213,0.1));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:24px;position:sticky;top:0;z-index:100}
+.header h1{
+  font-size:28px;
+  font-weight:700;
+  margin-bottom:4px;
+  background:linear-gradient(135deg,#007aff,#00c7ff,#007aff);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  letter-spacing:-1px;
+  animation:textShimmer 8s ease-in-out infinite;
+}
+@media(min-width:769px){.header h1{font-size:32px}}
+.header .tagline{
+  font-size:13px;
+  color:var(--text-secondary);
+  font-weight:400;
+  letter-spacing:0.2px;
+  animation:textFloat 6s ease-in-out infinite;
+}
+.user-bar{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.user-info{display:flex;align-items:center;gap:12px}
+.user-badge{background:rgba(0,122,255,0.15);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;color:#007aff;backdrop-filter:blur(10px);border:1px solid rgba(0,122,255,0.2)}
+.logout{padding:8px 18px;background:rgba(255,59,48,0.15);border:1px solid rgba(255,59,48,0.2);border-radius:24px;color:#ff3b30;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);backdrop-filter:blur(10px)}
+.logout:hover{background:rgba(255,59,48,0.25);transform:scale(1.05)}
+
+/* Premium tabs */
+.tabs{display:flex;background:var(--bg-elevated);border-bottom:1px solid var(--border);position:sticky;top:88px;z-index:99;overflow-x:auto;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.tab{flex:1;padding:16px 14px;text-align:center;border:none;background:none;font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;min-width:80px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);position:relative}
+@media(min-width:769px){.tab{font-size:14px;padding:18px 16px}}
+.tab:hover{color:var(--text-primary);background:rgba(255,255,255,0.03)}
+.tab.active{color:#007aff;border-bottom-color:#007aff;font-weight:600}
+.tab.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#007aff,transparent);animation:shimmer 2s infinite}
+
+.page{display:none;padding:20px;animation:fadeIn 0.4s cubic-bezier(0.4,0,0.2,1)}
+@media(min-width:769px){.page{padding:28px}}
+.page.active{display:block}
+
+/* Premium buttons with Apple style */
+.btn{width:100%;padding:15px 20px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#007aff,#0051d5);color:#fff;margin:12px 0;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:0 4px 20px rgba(0,122,255,0.3);position:relative;overflow:hidden;letter-spacing:0.2px}
+.btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:left 0.5s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,122,255,0.4)}
+.btn:hover::before{left:100%}
+.btn:active{transform:translateY(0)}
+.btn-sm{padding:10px 16px;font-size:13px;width:auto}
+.btn-compact{padding:7px 11px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;backdrop-filter:blur(10px)}
+.btn-compact-view{background:rgba(191,90,242,0.12);color:#bf5af2;border:1px solid rgba(191,90,242,0.3)}
+.btn-compact-view:hover{background:rgba(191,90,242,0.2);transform:translateY(-1px)}
+.btn-compact-pdf{background:rgba(0,122,255,0.12);color:#007aff;border:1px solid rgba(0,122,255,0.3)}
+.btn-compact-pdf:hover{background:rgba(0,122,255,0.2);transform:translateY(-1px)}
+.btn-compact-send{background:rgba(52,199,89,0.12);color:#34c759;border:1px solid rgba(52,199,89,0.3)}
+.btn-compact-send:hover{background:rgba(52,199,89,0.2);transform:translateY(-1px)}
+.btn-compact-edit{background:rgba(0,199,255,0.12);color:#00c7ff;border:1px solid rgba(0,199,255,0.3)}
+.btn-compact-edit:hover{background:rgba(0,199,255,0.2);transform:translateY(-1px)}
+.btn-compact-delete{background:rgba(255,59,48,0.12);color:#ff3b30;border:1px solid rgba(255,59,48,0.3)}
+.btn-compact-delete:hover{background:rgba(255,59,48,0.2);transform:translateY(-1px)}
+
+/* NEW PREMIUM BUTTON COLORS */
+.btn-view{background:linear-gradient(135deg,#bf5af2,#a855f7);box-shadow:0 4px 20px rgba(191,90,242,0.25)}
+.btn-view:hover{box-shadow:0 8px 30px rgba(191,90,242,0.4)}
+.btn-edit{background:linear-gradient(135deg,#00c7ff,#0891b2);box-shadow:0 4px 20px rgba(0,199,255,0.25)}
+.btn-edit:hover{box-shadow:0 8px 30px rgba(0,199,255,0.4)}
+
+.btn-success{background:linear-gradient(135deg,#34c759,#30d158);box-shadow:0 4px 20px rgba(52,199,89,0.3)}
+.btn-success:hover{box-shadow:0 8px 30px rgba(52,199,89,0.4)}
+.btn-danger{background:linear-gradient(135deg,#ff3b30,#ff453a);box-shadow:0 4px 20px rgba(255,59,48,0.3)}
+.btn-danger:hover{box-shadow:0 8px 30px rgba(255,59,48,0.4)}
+.btn-warning{background:linear-gradient(135deg,#ff9500,#ffb340);box-shadow:0 4px 20px rgba(255,149,0,0.3)}
+.btn-warning:hover{box-shadow:0 8px 30px rgba(255,149,0,0.4)}
+.btn-outline{background:transparent;color:#007aff;border:2px solid #007aff;box-shadow:none}
+.btn-outline:hover{background:rgba(0,122,255,0.1)}
+
+/* Premium cards with glass effect */
+.card{background:var(--bg-card);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,0.3);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);border:1px solid var(--border);position:relative;overflow:hidden}
+@media(min-width:769px){.card{padding:24px}}
+.card::before{content:'';position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;background:linear-gradient(135deg,rgba(0,122,255,0.1),transparent);border-radius:16px;opacity:0;transition:opacity 0.4s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 48px rgba(0,0,0,0.4);border-color:rgba(0,122,255,0.3)}
+.card:hover::before{opacity:1}
+.card-header{font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);letter-spacing:-0.3px}
+
+/* Premium stats with animated counters */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(min-width:769px){.stats{grid-template-columns:repeat(4,1fr);gap:18px}}
+.stat{background:var(--bg-card);padding:20px;border-radius:16px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.3);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);border:1px solid var(--border);position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#007aff,#00c7ff)}
+.stat.success::after{background:linear-gradient(90deg,#34c759,#30d158)}
+.stat.danger::after{background:linear-gradient(90deg,#ff3b30,#ff453a)}
+.stat.warning::after{background:linear-gradient(90deg,#ff9500,#ffb340)}
+.stat:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 48px rgba(0,0,0,0.4);border-color:rgba(0,122,255,0.3)}
+.stat-val{
+  font-size:28px;
+  font-weight:800;
+  color:var(--text-primary);
+  margin-bottom:8px;
+  letter-spacing:-1px;
+  animation:countUp 0.6s cubic-bezier(0.4,0,0.2,1), textGlow 4s ease-in-out infinite;
+}
+.stat-label{font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+
+/* CHART CONTAINERS - Interactive Dashboard */
+.chart-container{background:rgba(44,44,46,0.6);backdrop-filter:blur(40px);border-radius:20px;padding:24px;margin:20px 0;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.chart-wrapper{position:relative;height:280px}
+@media(min-width:769px){.chart-wrapper{height:350px}}
+
+/* Premium modal with blur */
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:200;padding:20px;overflow-y:auto;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.modal.show{display:flex;align-items:center;justify-content:center;animation:fadeIn 0.3s cubic-bezier(0.4,0,0.2,1)}
+.modal-box{background:var(--bg-elevated);border-radius:20px;padding:28px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 80px rgba(0,0,0,0.6);animation:scaleIn 0.4s cubic-bezier(0.4,0,0.2,1);border:1px solid var(--border)}
+@media(max-width:768px){.modal-box{max-width:100%;padding:24px}}
+.modal-head{display:flex;justify-content:space-between;margin-bottom:24px;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.modal-title{font-size:20px;font-weight:700;color:var(--text-primary);letter-spacing:-0.5px}
+.close{font-size:28px;cursor:pointer;color:var(--text-secondary);line-height:1;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,0.05)}
+.close:hover{background:rgba(255,59,48,0.2);color:#ff3b30;transform:rotate(90deg)}
+
+/* Premium forms */
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text-primary);letter-spacing:0.2px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:13px 15px;border:1px solid var(--border);border-radius:10px;font-size:15px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);background:var(--bg-card);color:var(--text-primary)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#007aff;box-shadow:0 0 0 4px rgba(0,122,255,0.1);background:var(--bg-elevated)}
+.form-group input::placeholder{color:var(--text-secondary)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){.form-row{grid-template-columns:1fr}}
+
+/* Premium badges */
+.badge{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block;text-transform:uppercase;letter-spacing:0.5px;backdrop-filter:blur(10px)}
+.badge.admin{background:rgba(0,122,255,0.2);color:#007aff;border:1px solid rgba(0,122,255,0.3)}
+.badge.manager{background:rgba(52,199,89,0.2);color:#34c759;border:1px solid rgba(52,199,89,0.3)}
+.badge.staff{background:rgba(255,149,0,0.2);color:#ff9500;border:1px solid rgba(255,149,0,0.3)}
+.badge.paid{background:rgba(52,199,89,0.2);color:#34c759;border:1px solid rgba(52,199,89,0.3)}
+.badge.pending{background:rgba(255,59,48,0.2);color:#ff3b30;border:1px solid rgba(255,59,48,0.3)}
+.badge.partial{background:rgba(255,149,0,0.2);color:#ff9500;border:1px solid rgba(255,149,0,0.3)}
+
+/* Premium items */
+.item{background:var(--bg-card);padding:16px;border-radius:12px;margin-bottom:12px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);border:1px solid var(--border)}
+.item:hover{border-color:rgba(0,122,255,0.5);transform:translateX(4px);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+
+.flex{display:flex;justify-content:space-between;align-items:center}
+
+/* Premium login */
+.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#000;padding:20px;position:relative;overflow:hidden}
+.login-page::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(0,122,255,0.15),transparent);border-radius:50%;top:-200px;left:-200px;animation:pulse 4s infinite}
+.login-page::after{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(0,199,255,0.1),transparent);border-radius:50%;bottom:-100px;right:-100px;animation:pulse 5s infinite}
+.login-box{background:var(--bg-elevated);border-radius:24px;padding:40px;max-width:440px;width:100%;box-shadow:0 20px 80px rgba(0,0,0,0.6);animation:scaleIn 0.5s cubic-bezier(0.4,0,0.2,1);border:1px solid var(--border);position:relative;z-index:1;backdrop-filter:blur(20px)}
+.login-title{text-align:center;font-size:28px;font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,#007aff,#00c7ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px}
+.login-subtitle{text-align:center;font-size:14px;color:var(--text-secondary);margin-bottom:32px;font-weight:400}
+
+.alert{padding:14px 16px;background:rgba(0,122,255,0.1);color:#007aff;border-radius:10px;margin-top:16px;font-size:13px;border:1px solid rgba(0,122,255,0.2);line-height:1.6;backdrop-filter:blur(10px)}
+
+.item-line{background:var(--bg-card);padding:14px;border-radius:10px;margin-bottom:10px;border:1px solid var(--border);transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+.item-line:hover{border-color:rgba(0,122,255,0.5);box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+@media(min-width:769px){.quick-grid{grid-template-columns:repeat(5,1fr)}}
+.quick-item{padding:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);color:var(--text-primary)}
+.quick-item:hover{background:#007aff;color:#fff;border-color:#007aff;transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,122,255,0.4)}
+
+.highlight-box{background:linear-gradient(135deg,rgba(0,122,255,0.2),rgba(0,199,255,0.2));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:var(--text-primary);padding:20px;border-radius:16px;margin-bottom:18px;box-shadow:0 8px 32px rgba(0,0,0,0.3);border:1px solid rgba(0,122,255,0.3)}
+
+.search-box{width:100%;padding:13px 16px;border:1px solid var(--border);border-radius:12px;margin-bottom:16px;font-size:15px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);background:var(--bg-card);color:var(--text-primary)}
+.search-box:focus{outline:none;border-color:#007aff;box-shadow:0 0 0 4px rgba(0,122,255,0.1);background:var(--bg-elevated)}
+.search-box::placeholder{color:var(--text-secondary)}
+
+.btn-group{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(min-width:769px){.btn-group{grid-template-columns:repeat(3,1fr)}}
+
+.profit-positive{color:#34c759;font-weight:700}
+.profit-negative{color:#ff3b30;font-weight:700}
+
+/* Premium loading */
+.loading{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(28,28,30,0.95);color:var(--text-primary);padding:24px 48px;border-radius:16px;z-index:9999;display:none;backdrop-filter:blur(20px);border:1px solid var(--border);box-shadow:0 20px 80px rgba(0,0,0,0.6)}
+.loading.show{display:block;animation:scaleIn 0.3s cubic-bezier(0.4,0,0.2,1)}
+.spinner{width:40px;height:40px;border:3px solid rgba(0,122,255,0.2);border-top-color:#007aff;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+
+/* Premium time filters */
+.time-filter{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.time-btn{padding:10px 18px;border:1px solid var(--border);background:var(--bg-card);border-radius:24px;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);color:var(--text-primary)}
+.time-btn:hover{background:rgba(0,122,255,0.1);border-color:rgba(0,122,255,0.5)}
+.time-btn.active{background:#007aff;color:#fff;border-color:#007aff;box-shadow:0 4px 20px rgba(0,122,255,0.3)}
+
+/* Premium empty state */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-secondary)}
+.empty-state .icon{font-size:56px;margin-bottom:16px;opacity:0.3;filter:grayscale(1)}
+.empty-state .title{font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:8px}
+.empty-state .desc{font-size:14px}
+
+/* Premium toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg-elevated);color:var(--text-primary);padding:16px 22px;border-radius:14px;box-shadow:0 12px 48px rgba(0,0,0,0.6);z-index:1000;animation:slideUp 0.4s cubic-bezier(0.4,0,0.2,1);max-width:340px;font-size:14px;border:1px solid var(--border);backdrop-filter:blur(20px);font-weight:500}
+.toast.success{border-color:rgba(52,199,89,0.5);background:rgba(52,199,89,0.15)}
+.toast.error{border-color:rgba(255,59,48,0.5);background:rgba(255,59,48,0.15)}
+.toast.warning{border-color:rgba(255,149,0,0.5);background:rgba(255,149,0,0.15)}
+
+/* Premium table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+table th{background:var(--bg-elevated);padding:12px;text-align:left;font-weight:700;color:var(--text-primary);border-bottom:2px solid var(--border)}
+table td{padding:12px;border-bottom:1px solid var(--border);color:var(--text-primary)}
+table tr:hover{background:rgba(255,255,255,0.02)}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--bg-dark)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:5px}
+::-webkit-scrollbar-thumb:hover{background:var(--secondary)}
+
+/* New customer inline form */
+.inline-form{background:rgba(0,122,255,0.05);padding:16px;border-radius:10px;margin-top:12px;border:1px dashed rgba(0,122,255,0.3);animation:slideDown 0.3s cubic-bezier(0.4,0,0.2,1)}
+.toggle-link{color:#007aff;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s}
+.toggle-link:hover{color:#00c7ff}
+
+@keyframes pulse{
+  0%,100%{opacity:0.3}
+  50%{opacity:0.6}
+}
+
+@media(max-width:768px){
+  .stats{grid-template-columns:1fr 1fr}
+  .btn-group{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+}
+/* Staff monitoring cards */
+.staff-card{background:var(--bg-card);border-radius:16px;padding:20px;margin-bottom:14px;border:1px solid var(--border);transition:all 0.2s;position:relative;overflow:hidden}
+.staff-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#007aff,#00c7ff)}
+.staff-card.perf-high::before{background:linear-gradient(180deg,#34c759,#28d160)}
+.staff-card.perf-medium::before{background:linear-gradient(180deg,#ff9500,#ffb340)}
+.staff-card.perf-low::before{background:linear-gradient(180deg,#ff3b30,#ff6b63)}
+.staff-card:hover{transform:translateY(-4px);box-shadow:0 10px 36px rgba(0,0,0,0.4)}
+.perf-bar-bg{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;margin-top:10px;overflow:hidden}
+.perf-bar-fill{height:100%;border-radius:3px;transition:width 0.8s ease-out}
+.perf-bar-fill.perf-high{background:linear-gradient(90deg,#34c759,#28d160)}
+.perf-bar-fill.perf-medium{background:linear-gradient(90deg,#ff9500,#ffb340)}
+.perf-bar-fill.perf-low{background:linear-gradient(90deg,#ff3b30,#ff6b63)}
+.staff-stat-box{background:rgba(0,0,0,0.2);border-radius:10px;padding:12px;text-align:center}
+
+/* Parcha styles */
+.parcha-upload-section{background:rgba(255,149,0,0.05);border:1.5px dashed rgba(255,149,0,0.3);border-radius:12px;padding:14px;margin-bottom:16px;text-align:center}
+.parcha-upload-section:hover{border-color:rgba(255,149,0,0.5);background:rgba(255,149,0,0.08)}
+.parcha-upload-icon{font-size:32px;margin-bottom:8px;opacity:0.6}
+.parcha-upload-label{font-size:12px;color:#888;margin-bottom:6px;font-weight:600}
+.parcha-upload-sublabel{font-size:10px;color:#555;margin-bottom:10px}
+.parcha-upload-btn{display:inline-block;padding:8px 18px;background:#2c2c2e;border:1px solid #3a3a3c;border-radius:8px;font-size:12px;font-weight:700;color:#ddd;cursor:pointer;transition:all 0.15s;font-family:inherit}
+.parcha-upload-btn:hover{background:#3a3a3c;border-color:#ff9500;color:#ff9500}
+.parcha-selected{background:rgba(52,199,89,0.08);border:1.5px solid rgba(52,199,89,0.35);border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.parcha-sel-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;border:1px solid #2a2a2a}
+.parcha-sel-info{flex:1}
+.parcha-sel-name{font-size:12px;font-weight:700;color:#34c759;margin-bottom:3px}
+.parcha-sel-size{font-size:10px;color:#555}
+.parcha-sel-remove{padding:6px 12px;background:rgba(255,59,48,0.12);border:1px solid rgba(255,59,48,0.25);border-radius:7px;font-size:11px;font-weight:700;color:#ff3b30;cursor:pointer}
+.parcha-compact{display:flex;align-items:center;gap:10px;padding:8px 11px;background:rgba(52,199,89,0.06);border:1px solid rgba(52,199,89,0.3);border-radius:9px;margin-bottom:10px}
+.parcha-compact-thumb{width:30px;height:30px;border-radius:6px;object-fit:cover;border:1px solid rgba(52,199,89,0.4)}
+.parcha-compact-info{flex:1}
+.parcha-compact-name{font-size:11px;font-weight:700;color:#34c759}
+.parcha-compact-size{font-size:9px;color:#555}
+.parcha-compact-btns{display:flex;gap:6px}
+.parcha-btn{padding:5px 10px;border:none;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit}
+.parcha-btn-view{background:#2c2c2e;color:#ddd;min-width:44px}
+.parcha-btn-remove{background:rgba(255,59,48,0.12);color:#ff3b30;border:1px solid rgba(255,59,48,0.25)}
+.send-badge{position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:#ff9500;color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(255,149,0,0.4)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="loading" class="loading">
+  <div class="spinner"></div>
+  <div>Loading...</div>
+</div>
+
+<script>
+console.log('✅ JavaScript loaded');
+const DEFAULT_USERS=[
+  {id:1,username:'admin',password:'admin123',name:'Aman Yadav',role:'admin'},
+  {id:2,username:'manager',password:'manager123',name:'Suresh',role:'manager'},
+  {id:3,username:'staff',password:'staff123',name:'Piyush Yadav',role:'staff'}
+];
+
+const SHOP_INFO={
+  name:'AMAN TRADERS',
+  appName:'Aman Traders Pro',
+  phone:'9412616252',
+  address:'NH2, near ITI chouraha, Shanti Colony, Etawah, Uttar Pradesh'
+};
+
+let user=null;
+let users=DEFAULT_USERS;
+let products=[
+  {id:1,code:'VT600',name:'Vitrified 600x600',cat:'tiles',unit:'sqft',costPrice:40,sellPrice:45,stock:500},
+  {id:2,code:'CERREF',name:'Cer Ref 10x27',cat:'tiles',unit:'sqft',costPrice:100,sellPrice:113,stock:250},
+  {id:3,code:'FBCREAM',name:'FB Dusty Cream 2x2',cat:'tiles',unit:'pcs',costPrice:720,sellPrice:800,stock:150},
+  {id:4,code:'CEMENT',name:'Cement',cat:'cement',unit:'bag',costPrice:340,sellPrice:360,stock:200},
+  {id:5,code:'RAVERA',name:'Ravera Creama 2x4',cat:'tiles',unit:'box',costPrice:700,sellPrice:750,stock:100}
+];
+let customers=[];
+let suppliers=[];
+let bills=[];
+let purchases=[];
+let scanner=null;
+let billItems=[];
+let currentParchas=[];
+let billSort='date-newest';
+let billStatusFilter='all';
+
+// Load data from server
+async function load(){
+  console.log('🔄 Loading data from server...');
+  try{
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+    
+    const response = await fetch('/api/data', { signal: controller.signal });
+    clearTimeout(timeout);
+    
+    if(!response.ok) throw new Error('Server responded with error');
+    const data = await response.json();
+    
+    user = data.user || null;
+    products = data.products || [];
+    customers = data.customers || [];
+    suppliers = data.suppliers || [];
+    bills = data.bills || [];
+    purchases = data.purchases || [];
+    users = data.users || DEFAULT_USERS;
+    
+    console.log('✅ Data loaded from server. Bills:', bills.length, 'Customers:', customers.length, 'Products:', products.length);
+  }catch(e){
+    console.error('❌ Error loading data:', e.message);
+    // Initialize with empty data if server fails
+    user = null;
+    products = products || [];
+    customers = customers || [];
+    suppliers = suppliers || [];
+    bills = bills || [];
+    purchases = purchases || [];
+    users = users || DEFAULT_USERS;
+    console.log('⚠️ Using empty data - server not available');
+  }
+}
+
+// Save data to server
+async function save(){
+  try{
+    const data = {
+      user,
+      products,
+      customers,
+      suppliers,
+      bills,
+      purchases,
+      users
+    };
+    
+    const response = await fetch('/api/data', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    
+    if(!response.ok) throw new Error('Failed to save data');
+    console.log('✅ Data saved to server');
+  }catch(e){
+    console.error('❌ Error saving data:', e);
+    showToast('Failed to save data to server', 'error');
+  }
+}
+
+function showToast(message,type='success'){
+  const toast=document.createElement('div');
+  toast.className=`toast ${type}`;
+  toast.textContent=message;
+  document.body.appendChild(toast);
+  setTimeout(()=>{
+    toast.style.opacity='0';
+    toast.style.transform='translateY(20px)';
+    setTimeout(()=>toast.remove(),300);
+  },2500);
+}
+
+function showLoading(show){
+  document.getElementById('loading').className=show?'loading show':'loading';
+}
+
+function showLogin(){
+  console.log('📱 Showing login screen');
+  document.getElementById('app').innerHTML=`
+    <div class="login-page">
+      <div class="login-box">
+        <h1 class="login-title">Aman Traders Pro</h1>
+        <p class="login-subtitle">Premium Business Management</p>
+        <form onsubmit="return doLogin(event)">
+          <div class="form-group">
+            <label>Username</label>
+            <input id="loginUser" required autocomplete="off" placeholder="Enter username">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input id="loginPass" type="password" required autocomplete="off" placeholder="Enter password">
+          </div>
+          <button type="submit" class="btn">Sign In</button>
+        </form>
+        <div class="alert">
+          <strong>Demo Accounts</strong><br>
+          admin / admin123 (Aman Yadav)<br>
+          manager / manager123 (Suresh)<br>
+          staff / staff123 (Piyush Yadav)
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function doLogin(e){
+  e.preventDefault();
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value;
+  const found=users.find(x=>x.username===u&&x.password===p);
+  if(found){
+    user=found;
+    save();
+    showToast('Welcome, '+user.name);
+    showMain();
+  }else{
+    showToast('Invalid credentials','error');
+  }
+  return false;
+}
+
+function doLogout(){
+  if(confirm('Are you sure you want to logout?')){
+    user=null;
+    save();
+    showLogin();
+  }
+}
+
+function showMain(){
+  const role=user.role;
+  let tabs='';
+  
+  if(role==='admin'){
+    tabs=`
+      <button class="tab active" onclick="goTab(0)">Dashboard</button>
+      <button class="tab" onclick="goTab(1)">Sales</button>
+      <button class="tab" onclick="goTab(2)">Purchases</button>
+      <button class="tab" onclick="goTab(3)">Inventory</button>
+      <button class="tab" onclick="goTab(4)">Customers</button>
+      <button class="tab" onclick="goTab(5)">Suppliers</button>
+      <button class="tab" onclick="goTab(6)">Accounting</button>
+      <button class="tab" onclick="goTab(7)">Users</button>
+      <button class="tab" onclick="goTab(8)">Staff</button>
+      <button class="tab" onclick="goTab(9)">Reports</button>
+    `;
+  }else if(role==='manager'){
+    tabs=`
+      <button class="tab active" onclick="goTab(0)">Dashboard</button>
+      <button class="tab" onclick="goTab(1)">Sales</button>
+      <button class="tab" onclick="goTab(2)">Purchases</button>
+      <button class="tab" onclick="goTab(3)">Inventory</button>
+      <button class="tab" onclick="goTab(4)">Customers</button>
+      <button class="tab" onclick="goTab(5)">Suppliers</button>
+      <button class="tab" onclick="goTab(6)">Accounting</button>
+      <button class="tab" onclick="goTab(9)">Reports</button>
+    `;
+  }else{
+    tabs=`
+      <button class="tab active" onclick="goTab(0)">Dashboard</button>
+      <button class="tab" onclick="goTab(1)">Sales</button>
+      <button class="tab" onclick="goTab(3)">Inventory</button>
+      <button class="tab" onclick="goTab(4)">Customers</button>
+      <button class="tab" onclick="goTab(9)">Reports</button>
+    `;
+  }
+  
+  document.getElementById('app').innerHTML=`
+    <div class="app fade-in">
+      <div class="header">
+        <h1>Aman Traders Pro</h1>
+        <div class="tagline">Premium Business Management • ${SHOP_INFO.phone}</div>
+        <div class="user-bar">
+          <div class="user-info">
+            <span style="font-weight:700;font-size:15px">${user.name}</span>
+            <span class="user-badge">${user.role.toUpperCase()}</span>
+          </div>
+          <button class="logout" onclick="doLogout()">Logout</button>
+        </div>
+      </div>
+      <div class="tabs">${tabs}</div>
+      <div id="page0" class="page active"></div>
+      <div id="page1" class="page"></div>
+      <div id="page2" class="page"></div>
+      <div id="page3" class="page"></div>
+      <div id="page4" class="page"></div>
+      <div id="page5" class="page"></div>
+      <div id="page6" class="page"></div>
+      <div id="page7" class="page"></div>
+      <div id="page8" class="page"></div>
+      <div id="page9" class="page"></div>
+    </div>
+  `;
+  
+  renderAllPages();
+}
+
+function goTab(n){
+  // Remove active from all tabs and pages
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  
+  // Find the tab button that was clicked (by matching onclick attribute)
+  const clickedTab=Array.from(document.querySelectorAll('.tab')).find(t=>t.getAttribute('onclick')===`goTab(${n})`);
+  if(clickedTab)clickedTab.classList.add('active');
+  
+  // Activate the corresponding page
+  const page=document.getElementById(`page${n}`);
+  if(page)page.classList.add('active');
+  
+  // Refresh the page content when switching
+  console.log('📍 Switching to tab', n, '- Bills count:', bills.length);
+  if(n===0)showHome();
+  else if(n===1)showBills();
+  else if(n===2)showPurchases();
+  else if(n===3)showProducts();
+  else if(n===4)showCustomers();
+  else if(n===5)showSuppliers();
+  else if(n===6){
+    console.log('🔄 Refreshing Accounting tab...');
+    showAccounting();
+  }
+  else if(n===7)showUsers();
+  else if(n===8)showStaff();
+  else if(n===9)showReports();
+}
+
+function renderAllPages(){
+  showHome();
+  showBills();
+  if(user.role!=='staff')showPurchases();
+  showProducts();
+  showCustomers();
+  if(user.role!=='staff')showSuppliers();
+  if(user.role!=='staff')showAccounting();
+  if(user.role==='admin')showUsers();
+  if(user.role==='admin')showStaff();
+  showReports();
+}
+
+function showHome(){
+  const myBills=user.role==='staff'?bills.filter(b=>b.by===user.id):bills;
+  const totalSales=myBills.reduce((s,b)=>s+b.total,0);
+  const totalCost=myBills.reduce((s,b)=>s+(b.cost||0),0);
+  const profit=totalSales-totalCost;
+  const pending=myBills.filter(b=>b.status!=='paid').reduce((s,b)=>s+(b.total-b.paid),0);
+  
+  const today=new Date().toDateString();
+  const todayBills=myBills.filter(b=>new Date(b.date).toDateString()===today);
+  const todaySales=todayBills.reduce((s,b)=>s+b.total,0);
+  const todayCost=todayBills.reduce((s,b)=>s+(b.cost||0),0);
+  const todayProfit=todaySales-todayCost;
+  
+  let html=``;
+  
+  if(todayBills.length>0){
+    html+=`
+      <div class="highlight-box slide-down">
+        <div style="font-size:13px;opacity:0.8;margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase">Today's Performance</div>
+        <div style="font-size:36px;font-weight:800;letter-spacing:-1px">₹${todaySales.toLocaleString()}</div>
+        <div style="font-size:14px;opacity:0.9;margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div><span style="opacity:0.7">Bills:</span> <strong>${todayBills.length}</strong></div>
+          <div><span style="opacity:0.7">Profit:</span> <strong>₹${todayProfit.toLocaleString()}</strong></div>
+        </div>
+      </div>
+    `;
+  }
+  
+  html+=`
+    <div class="stats">
+      <div class="stat slide-up" style="animation-delay:0.05s">
+        <div class="stat-val">₹${totalSales.toLocaleString()}</div>
+        <div class="stat-label">Total Sales</div>
+      </div>
+      <div class="stat success slide-up" style="animation-delay:0.1s">
+        <div class="stat-val">₹${profit.toLocaleString()}</div>
+        <div class="stat-label">Total Profit</div>
+      </div>
+      <div class="stat warning slide-up" style="animation-delay:0.15s">
+        <div class="stat-val">₹${pending.toLocaleString()}</div>
+        <div class="stat-label">Pending Amount</div>
+      </div>
+      <div class="stat danger slide-up" style="animation-delay:0.2s">
+        <div class="stat-val">${myBills.length}</div>
+        <div class="stat-label">Total Bills</div>
+      </div>
+    </div>
+  `;
+  
+  if(user.role==='admin'){
+    const lowStock=products.filter(p=>p.stock<50);
+    if(lowStock.length>0){
+      html+=`
+        <div class="card slide-up" style="border-left:3px solid #ff3b30;animation-delay:0.25s">
+          <div class="card-header" style="color:#ff3b30">Low Stock Alert</div>
+          ${lowStock.slice(0,5).map(p=>`
+            <div style="padding:12px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:700;color:var(--text-primary);font-size:15px">${p.name}</div>
+                <div style="font-size:13px;color:var(--text-secondary);margin-top:2px">${p.code}</div>
+              </div>
+              <div style="font-size:18px;font-weight:800;color:#ff3b30">${p.stock} ${p.unit}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+  }
+  
+  // Quick actions
+  html+=`
+    <div class="card slide-up" style="animation-delay:0.3s">
+      <div class="card-header">Quick Actions</div>
+      <div class="btn-group">
+        <button class="btn btn-sm" onclick="openNewBill()">Create Bill</button>
+        <button class="btn btn-sm btn-success" onclick="openNewCustomer()">Add Customer</button>
+        ${user.role!=='staff'?`<button class="btn btn-sm btn-warning" onclick="openNewProduct()">Add Product</button>`:''}
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('page0').innerHTML=html;
+}
+
+// Continue in next part due to length...
+// I'll create the rest of the functions including the NEW inline customer creation
+
+function handleParchaUpload(e){
+  const files=Array.from(e.target.files);
+  if(!files.length)return;
+  files.forEach(file=>{
+    if(!file.type.startsWith('image/')){
+      showToast('Only images allowed','error');
+      return;
+    }
+    if(file.size>5*1024*1024){
+      showToast('Image too large (max 5MB)','error');
+      return;
+    }
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      currentParchas.push({dataURL:ev.target.result,size:file.size,name:file.name});
+      updateParchasUI();
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value='';
+}
+
+function updateParchasUI(){
+  const container=document.getElementById('parchasListSection');
+  if(!container)return;
+  if(currentParchas.length===0){
+    container.innerHTML='';
+    return;
+  }
+  container.innerHTML=currentParchas.map((p,i)=>`
+    <div class="parcha-selected" style="margin-bottom:8px">
+      <img src="${p.dataURL}" class="parcha-sel-thumb" alt="Parcha ${i+1}">
+      <div class="parcha-sel-info">
+        <div class="parcha-sel-name">✓ Parcha ${i+1}</div>
+        <div class="parcha-sel-size">${(p.size/1024).toFixed(1)} KB</div>
+      </div>
+      <button type="button" class="parcha-sel-remove" onclick="removeParchaAtIndex(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeParchaAtIndex(i){
+  currentParchas.splice(i,1);
+  updateParchasUI();
+}
+
+function viewParchasModal(billId){
+  const b=bills.find(x=>x.id===billId);
+  if(!b||!b.parchas||b.parchas.length===0)return;
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Parchas - Bill #${b.no||b.id}</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <div style="max-height:70vh;overflow-y:auto">
+      ${b.parchas.map((p,i)=>`
+        <div style="margin-bottom:16px;text-align:center">
+          <div style="font-size:11px;color:#888;margin-bottom:8px;font-weight:700">Parcha ${i+1}</div>
+          <img src="${p}" style="max-width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.4)">
+        </div>
+      `).join('')}
+    </div>
+    <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal()">Close</button>
+  `);
+}
+
+function removeParchaFromBill(billId,index){
+  if(!confirm('Remove this parcha?'))return;
+  const b=bills.find(x=>x.id===billId);
+  if(b&&b.parchas){
+    b.parchas.splice(index,1);
+    if(b.parchas.length===0)b.parchas=null;
+    save();
+    showToast('Parcha removed','error');
+    renderAllPages();
+  }
+}
+
+async function shareBill(billId){
+  const b=bills.find(x=>x.id===billId);
+  if(!b){showToast('Bill not found','error');return;}
+  
+  // Handle old format (single parcha)
+  if(!b.parchas&&b.parcha){
+    b.parchas=[b.parcha];
+    delete b.parcha;
+    save();
+  }
+  
+  if(!b.parchas||b.parchas.length===0){
+    showToast('No parchas to send','error');
+    return;
+  }
+  
+  const c=customers.find(x=>x.id===b.cid);
+  
+  if(navigator.share){
+    try{
+      const files=[];
+      for(let i=0;i<b.parchas.length;i++){
+        const parchaBlob=await fetch(b.parchas[i]).then(r=>r.blob());
+        files.push(new File([parchaBlob],`Parcha_${b.no||b.id}_${i+1}.jpg`,{type:'image/jpeg'}));
+      }
+      await navigator.share({
+        title:`Bill #${b.no||b.id} - ${SHOP_INFO.name}`,
+        text:`${b.parchas.length} Parcha${b.parchas.length>1?'s':''} for ${c?c.name:'Walk-in'} - ₹${b.total.toLocaleString()}`,
+        files:files
+      });
+      showToast('Shared successfully!');
+    }catch(err){
+      if(err.name!=='AbortError'){
+        showToast('Share failed: '+err.message,'error');
+      }
+    }
+  }else{
+    const phone=c&&c.phone?c.phone.replace(/\D/g,''):'';
+    let msg=`*${SHOP_INFO.name}*%0ABill #${b.no||b.id}%0ADate: ${new Date(b.date).toLocaleDateString('en-IN')}%0A%0ACustomer: ${c?c.name:'Walk-in'}%0AAmount: ₹${b.total.toLocaleString()}%0A%0A📎 ${b.parchas.length} Parcha${b.parchas.length>1?'s':''} attached%0A%0AThank you!`;
+    window.open(`https://wa.me/${phone}?text=${msg}`,'_blank');
+  }
+}
+
+function viewSingleParcha(billId){
+  const b=bills.find(x=>x.id===billId);
+  if(!b||!b.parcha)return;
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Parcha - Bill #${b.no||b.id}</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <div style="text-align:center">
+      <img src="${b.parcha}" style="max-width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.4)">
+    </div>
+    <button class="btn btn-outline" style="margin-top:12px" onclick="closeModal()">Close</button>
+  `);
+}
+
+async function generateBillPDFBlob(b){
+  try{
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF();
+    const c=customers.find(x=>x.id===b.cid);
+    const cr=users.find(x=>x.id===b.by);
+    
+    doc.setFontSize(18);doc.setFont(undefined,'bold');
+    doc.text(SHOP_INFO.name,105,18,'center');
+    doc.setFontSize(9);doc.setFont(undefined,'normal');
+    doc.text(SHOP_INFO.address,105,25,'center');
+    doc.text('Phone: '+SHOP_INFO.phone,105,30,'center');
+    doc.setDrawColor(0);doc.setLineWidth(0.6);doc.line(10,34,200,34);
+    doc.setFontSize(10);
+    doc.text('Bill No: #'+(b.no||b.id),10,42);
+    doc.text('Date: '+new Date(b.date).toLocaleDateString('en-IN'),10,48);
+    doc.text('By: '+(cr?cr.name:'N/A'),10,54);
+    doc.text('Status: '+b.status.toUpperCase(),150,42);
+    if(c){doc.text('Customer: '+c.name,10,62);if(c.phone)doc.text('Phone: '+c.phone,10,68);}
+    doc.line(10,74,200,74);
+    
+    let y=82;
+    doc.setFont(undefined,'bold');
+    doc.text('Item',10,y);doc.text('Code',95,y);doc.text('Qty',120,y);doc.text('Rate',145,y);doc.text('Amount',175,y);
+    doc.setLineWidth(0.3);doc.line(10,y+3,200,y+3);
+    y+=10;doc.setFont(undefined,'normal');
+    
+    b.items.forEach(item=>{
+      doc.text(item.name.substring(0,28),10,y);
+      doc.text(item.code,95,y);
+      doc.text(String(item.q)+' '+item.unit,120,y);
+      doc.text('Rs.'+item.r.toLocaleString(),145,y);
+      doc.text('Rs.'+item.a.toLocaleString(),175,y);
+      y+=8;
+      if(y>270){doc.addPage();y=20;}
+    });
+    
+    doc.line(10,y,200,y);y+=8;
+    doc.setFont(undefined,'bold');doc.setFontSize(12);
+    doc.text('TOTAL:',140,y);doc.text('Rs.'+b.total.toLocaleString(),175,y);y+=8;
+    doc.setFontSize(10);doc.setFont(undefined,'normal');
+    doc.setTextColor(40,160,80);doc.text('Paid: Rs.'+b.paid.toLocaleString(),140,y);y+=7;
+    if(b.status!=='paid'){doc.setTextColor(200,30,30);doc.text('Pending: Rs.'+(b.total-b.paid).toLocaleString(),140,y);}
+    doc.setTextColor(0,0,0);
+    doc.setFontSize(9);doc.setFont(undefined,'italic');
+    doc.text('Thank you for your business!',105,280,'center');
+    
+    return doc.output('blob');
+  }catch(err){
+    console.error('PDF generation error:',err);
+    return null;
+  }
+}
+
+function showBills(){
+  let myBills=user.role==='staff'?bills.filter(b=>b.by===user.id):bills;
+  
+  if(billStatusFilter!=='all'){
+    myBills=myBills.filter(b=>b.status===billStatusFilter);
+  }
+  
+  myBills=myBills.slice().sort((a,b)=>{
+    if(billSort==='date-newest')return new Date(b.date)-new Date(a.date);
+    if(billSort==='date-oldest')return new Date(a.date)-new Date(b.date);
+    if(billSort==='customer'){
+      const ca=customers.find(x=>x.id===a.cid);
+      const cb=customers.find(x=>x.id===b.cid);
+      return(ca?ca.name:'').localeCompare(cb?cb.name:'');
+    }
+    if(billSort==='amount')return b.total-a.total;
+    return 0;
+  });
+  
+  let html=`
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <button class="btn" onclick="openNewBill()">+ Create Bill</button>
+      <select onchange="billSort=this.value;showBills()" style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;color:var(--text-primary);font-size:13px;font-weight:600">
+        <option value="date-newest" ${billSort==='date-newest'?'selected':''}>📅 Newest First</option>
+        <option value="date-oldest" ${billSort==='date-oldest'?'selected':''}>📅 Oldest First</option>
+        <option value="customer" ${billSort==='customer'?'selected':''}>👤 Customer</option>
+        <option value="amount" ${billSort==='amount'?'selected':''}>💰 Amount</option>
+      </select>
+      <select onchange="billStatusFilter=this.value;showBills()" style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;color:var(--text-primary);font-size:13px;font-weight:600">
+        <option value="all" ${billStatusFilter==='all'?'selected':''}>All Status</option>
+        <option value="paid" ${billStatusFilter==='paid'?'selected':''}>Paid</option>
+        <option value="pending" ${billStatusFilter==='pending'?'selected':''}>Pending</option>
+        <option value="partial" ${billStatusFilter==='partial'?'selected':''}>Partial</option>
+      </select>
+    </div>
+    <input type="text" class="search-box" placeholder="Search bills..." oninput="searchBills(this.value)">
+    <div id="billsList">
+  `;
+  
+  if(myBills.length===0){
+    html+=`
+      <div class="empty-state">
+        <div class="icon">📋</div>
+        <div class="title">No Bills Yet</div>
+        <div class="desc">Create your first bill to get started</div>
+      </div>
+    `;
+  }else{
+    html+=myBills.map((b,idx)=>{
+      const c=customers.find(x=>x.id===b.cid);
+      const creator=users.find(x=>x.id===b.by);
+      const profit=b.total-(b.cost||0);
+      return`
+        <div class="item bill-item slide-up" style="animation-delay:${idx*0.005}s">
+          <div class="flex" style="margin-bottom:12px">
+            <div>
+              <span style="font-weight:700;color:#007aff;font-size:16px">Bill #${b.no||b.id}</span>
+              <span style="margin-left:12px;font-size:13px;color:var(--text-secondary)">${new Date(b.date).toLocaleDateString('en-IN')}</span>
+            </div>
+            <span class="badge ${b.status}">${b.status}</span>
+          </div>
+          <div style="font-size:14px;color:var(--text-primary);line-height:1.8;margin-bottom:12px">
+            <strong>Customer:</strong> ${c?c.name:'Walk-in'}<br>
+            <strong>Amount:</strong> ₹${b.total.toLocaleString()} • <strong>Profit:</strong> <span class="profit-positive">₹${profit.toLocaleString()}</span><br>
+            <strong>Payment:</strong> ${b.paymentMethod?b.paymentMethod.toUpperCase():'CASH'} • <strong>By:</strong> ${creator?creator.name:'N/A'}
+          </div>
+          ${(b.parchas&&b.parchas.length>0)||(b.parcha)?`
+            <div class="parcha-compact">
+              <div style="width:30px;height:30px;border-radius:6px;background:linear-gradient(135deg,#ff9500,#cc7700);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff">${b.parchas?b.parchas.length:'1'}</div>
+              <div class="parcha-compact-info">
+                <div class="parcha-compact-name">✓ ${b.parchas?b.parchas.length+' Parcha'+(b.parchas.length>1?'s':''):'1 Parcha'}</div>
+                <div class="parcha-compact-size">Physical ${b.parchas?'copies':'copy'}</div>
+              </div>
+              <div class="parcha-compact-btns">
+                <button class="parcha-btn parcha-btn-view" onclick="${b.parchas?`viewParchasModal(${b.id})`:`viewSingleParcha(${b.id})`}">View</button>
+              </div>
+            </div>
+          `:''}
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn-compact btn-compact-view" onclick="viewBill(${b.id})">View</button>
+            <button class="btn-compact btn-compact-pdf" onclick="viewBillPDF(${b.id})">PDF</button>
+            ${(b.parchas&&b.parchas.length>0)||b.parcha?`<button class="btn-compact btn-compact-send" onclick="shareBill(${b.id})">Send</button>`:''}
+            <button class="btn-compact btn-compact-edit" onclick="editBill(${b.id})">Edit</button>
+            ${user.role==='admin'?`<button class="btn-compact btn-compact-delete" onclick="deleteBill(${b.id})">Delete</button>`:''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  html+=`</div>`;
+  document.getElementById('page1').innerHTML=html;
+}
+
+function searchBills(term){
+  const items=document.querySelectorAll('.bill-item');
+  term=term.toLowerCase();
+  items.forEach(item=>{
+    const text=item.textContent.toLowerCase();
+    item.style.display=text.includes(term)?'block':'none';
+  });
+}
+
+function deleteBill(id){
+  if(!confirm('Delete this bill? This action cannot be undone.')){
+    return;
+  }
+  const idx=bills.findIndex(b=>b.id===id);
+  if(idx>-1){
+    bills.splice(idx,1);
+    save();
+    showToast('Bill deleted successfully','error');
+    renderAllPages();
+  }
+}
+
+function editBill(id){
+  const b=bills.find(x=>x.id===id);
+  if(!b)return;
+  
+  const c=customers.find(x=>x.id===b.cid);
+  const rem=b.total-b.paid;
+  
+  if(b.status==='paid'){
+    showToast('Bill is already fully paid','warning');
+    return;
+  }
+  
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Edit Payment - Bill #${b.no||b.id}</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <div style="margin-bottom:20px">
+      <div style="font-size:14px;line-height:1.8;color:var(--text-primary)">
+        <strong>Customer:</strong> ${c?c.name:'Walk-in'}<br>
+        <strong>Total Amount:</strong> ₹${b.total.toLocaleString()}<br>
+        <strong>Already Paid:</strong> ₹${b.paid.toLocaleString()}<br>
+        <strong style="color:#ff9500">Pending:</strong> ₹${rem.toLocaleString()}
+      </div>
+    </div>
+    <form onsubmit="return updateBillPayment(event,${id})">
+      <div class="form-group">
+        <label>Add Payment Amount</label>
+        <input type="number" id="addPayment" step="0.01" min="0" max="${rem}" placeholder="Enter amount" required autofocus>
+      </div>
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select id="addPaymentMethod">
+          <option value="cash">Cash</option>
+          <option value="upi">UPI</option>
+          <option value="card">Card</option>
+          <option value="cheque">Cheque</option>
+          <option value="bank">Bank Transfer</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-success">Add Payment</button>
+    </form>
+  `);
+}
+
+function updateBillPayment(e,id){
+  e.preventDefault();
+  const b=bills.find(x=>x.id===id);
+  if(!b)return false;
+  
+  const pay=parseFloat(document.getElementById('addPayment').value);
+  const method=document.getElementById('addPaymentMethod').value;
+  
+  if(pay&&pay>0){
+    b.paid+=pay;
+    b.paymentMethod=method;
+    b.status=b.paid>=b.total?'paid':'partial';
+    save();
+    closeModal();
+    showToast('Payment updated successfully');
+    renderAllPages();
+  }
+  return false;
+}
+
+// NEW FEATURE: Inline customer creation in bill
+let showCustomerForm=false;
+
+function openNewBill(){
+  billItems=[];
+  currentParchas=[];
+  currentParchaFile=null;
+  currentParchaDataURL=null;
+  const nextNo=bills.length>0?Math.max(...bills.map(b=>b.no||b.id))+1:1;
+  
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Create Bill #${nextNo}</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <form onsubmit="return createBill(event,${nextNo})">
+      <div class="form-group">
+        <label>Customer</label>
+        <select id="billCust" onchange="toggleCustomerForm()">
+          <option value="">Walk-in Customer</option>
+          <option value="new">+ Add New Customer</option>
+          ${customers.map(c=>`<option value="${c.id}">${c.name} - ${c.phone}</option>`).join('')}
+        </select>
+      </div>
+      
+      <div id="newCustomerForm" style="display:none"></div>
+      
+      <div style="background:rgba(0,122,255,0.05);padding:16px;border-radius:12px;margin-bottom:20px;border:1px solid rgba(0,122,255,0.2)">
+        <div style="font-weight:700;margin-bottom:14px;color:var(--text-primary)">Add Items</div>
+        
+        <div class="quick-grid">
+          ${products.slice(0,6).map(p=>`
+            <div class="quick-item" onclick="quickProd(${p.id})">
+              <div style="font-weight:700;font-size:11px">${p.code}</div>
+              <div style="font-size:10px;margin-top:3px;opacity:0.7">₹${p.sellPrice}</div>
+            </div>
+          `).join('')}
+        </div>
+        
+        <div class="form-group">
+          <label>Product</label>
+          <select id="billProd" onchange="updateRate()">
+            <option value="">Select Product</option>
+            ${products.map(p=>`<option value="${p.id}" data-sell="${p.sellPrice}" data-cost="${p.costPrice}" data-unit="${p.unit}" data-code="${p.code}" data-name="${p.name}">${p.code} - ${p.name} (₹${p.sellPrice})</option>`).join('')}
+          </select>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px">
+          <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" id="billQty" step="0.1" min="0.1" oninput="calcAmt()" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label>Rate (₹)</label>
+            <input type="number" id="billRate" step="0.1" min="0" oninput="calcAmt()" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label>Amount</label>
+            <input type="number" id="billAmt" readonly style="background:var(--bg-card);opacity:0.7" placeholder="0">
+          </div>
+        </div>
+        
+        <button type="button" class="btn btn-sm" onclick="addBillItem()">Add Item</button>
+        <div id="billItems"></div>
+      </div>
+      
+      <div style="margin-bottom:16px">
+        <label style="display:block;font-size:11px;font-weight:700;color:var(--text-secondary);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.8px">🧾 Attach Parchas (Optional)</label>
+        <div id="parchasListSection"></div>
+        <label class="parcha-upload-btn" style="display:inline-block;margin-top:8px">
+          + Add Parcha Photos
+          <input type="file" accept="image/*" onchange="handleParchaUpload(event)" style="display:none" multiple>
+        </label>
+      </div>
+      
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select id="billPaymentMethod">
+          <option value="cash">Cash</option>
+          <option value="upi">UPI</option>
+          <option value="card">Card</option>
+          <option value="cheque">Cheque</option>
+          <option value="bank">Bank Transfer</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Cash Received (₹)</label>
+        <input type="number" id="billPaid" min="0" value="0" placeholder="Enter amount">
+      </div>
+      
+      <button type="submit" class="btn btn-success">Create Bill</button>
+    </form>
+  `);
+}
+
+// NEW: Toggle customer form
+function toggleCustomerForm(){
+  const sel=document.getElementById('billCust');
+  const form=document.getElementById('newCustomerForm');
+  
+  if(sel.value==='new'){
+    form.style.display='block';
+    form.innerHTML=`
+      <div class="inline-form">
+        <div style="font-weight:700;margin-bottom:12px;color:#007aff">New Customer Details</div>
+        <div class="form-group">
+          <label>Customer Name *</label>
+          <input type="text" id="newCustName" required placeholder="Enter name">
+        </div>
+        <div class="form-group">
+          <label>Company (Optional)</label>
+          <input type="text" id="newCustCompany" placeholder="Enter company name">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone *</label>
+            <input type="tel" id="newCustPhone" required placeholder="Enter phone">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="newCustEmail" placeholder="Enter email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <textarea id="newCustAddr" rows="2" placeholder="Enter address"></textarea>
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:8px">This customer will be saved automatically when you create the bill</div>
+      </div>
+    `;
+  }else{
+    form.style.display='none';
+    form.innerHTML='';
+  }
+}
+
+function quickProd(id){
+  document.getElementById('billProd').value=id;
+  updateRate();
+  document.getElementById('billQty').focus();
+}
+
+function updateRate(){
+  const sel=document.getElementById('billProd');
+  const opt=sel.options[sel.selectedIndex];
+  if(opt.value){
+    document.getElementById('billRate').value=opt.getAttribute('data-sell');
+    calcAmt();
+  }
+}
+
+function calcAmt(){
+  const q=parseFloat(document.getElementById('billQty').value)||0;
+  const r=parseFloat(document.getElementById('billRate').value)||0;
+  document.getElementById('billAmt').value=(q*r).toFixed(2);
+}
+
+function addBillItem(){
+  const sel=document.getElementById('billProd');
+  const pid=parseInt(sel.value);
+  const q=parseFloat(document.getElementById('billQty').value);
+  const r=parseFloat(document.getElementById('billRate').value);
+  
+  if(!pid){showToast('Select a product','error');return}
+  if(!q||q<=0){showToast('Enter quantity','error');return}
+  if(!r||r<=0){showToast('Enter rate','error');return}
+  
+  const opt=sel.options[sel.selectedIndex];
+  const code=opt.getAttribute('data-code');
+  const name=opt.getAttribute('data-name');
+  const unit=opt.getAttribute('data-unit');
+  const cost=parseFloat(opt.getAttribute('data-cost'));
+  const a=q*r;
+  
+  billItems.push({pid,code,name,q,r,unit,a,cost:cost*q});
+  
+  document.getElementById('billQty').value='';
+  document.getElementById('billRate').value='';
+  document.getElementById('billAmt').value='';
+  document.getElementById('billProd').value='';
+  
+  updateBillItems();
+  showToast('Item added','success');
+}
+
+function updateBillItems(){
+  const tot=billItems.reduce((s,i)=>s+i.a,0);
+  const totalCost=billItems.reduce((s,i)=>s+i.cost,0);
+  const profit=tot-totalCost;
+  
+  document.getElementById('billItems').innerHTML=`
+    <div style="margin-top:18px">
+      ${billItems.map((i,idx)=>`
+        <div class="item-line">
+          <div class="flex">
+            <div style="flex:1">
+              <div style="font-weight:700;font-size:15px;color:var(--text-primary)">${i.code} - ${i.name}</div>
+              <div style="font-size:13px;color:var(--text-secondary);margin-top:4px">${i.q} ${i.unit} × ₹${i.r} = ₹${i.a.toLocaleString()}</div>
+            </div>
+            <button type="button" onclick="removeBillItem(${idx})" style="background:#ff3b30;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;transition:all 0.2s">Remove</button>
+          </div>
+        </div>
+      `).join('')}
+      ${billItems.length>0?`
+        <div style="background:linear-gradient(135deg,rgba(0,122,255,0.2),rgba(0,199,255,0.2));backdrop-filter:blur(20px);padding:16px;border-radius:12px;margin-top:16px;border:1px solid rgba(0,122,255,0.3)">
+          <div class="flex" style="margin-bottom:8px">
+            <span style="font-size:15px;font-weight:700">TOTAL AMOUNT</span>
+            <span style="font-size:26px;font-weight:800;letter-spacing:-1px">₹${tot.toLocaleString()}</span>
+          </div>
+          <div class="flex" style="font-size:14px;opacity:0.9">
+            <span>Estimated Profit</span>
+            <span style="font-weight:700">₹${profit.toLocaleString()}</span>
+          </div>
+        </div>
+      `:'<div style="text-align:center;color:var(--text-secondary);padding:20px;font-size:14px">No items added yet</div>'}
+    </div>
+  `;
+}
+
+function removeBillItem(idx){
+  billItems.splice(idx,1);
+  updateBillItems();
+  showToast('Item removed','warning');
+}
+
+function createBill(e,no){
+  e.preventDefault();
+  
+  if(billItems.length===0){
+    showToast('Add at least one item','error');
+    return false;
+  }
+  
+  let cid=document.getElementById('billCust').value;
+  
+  // NEW: Check if creating new customer
+  if(cid==='new'){
+    const name=document.getElementById('newCustName').value.trim();
+    const phone=document.getElementById('newCustPhone').value.trim();
+    const email=document.getElementById('newCustEmail').value.trim();
+    const addr=document.getElementById('newCustAddr').value.trim();
+    
+    if(!name||!phone){
+      showToast('Enter customer name and phone','error');
+      return false;
+    }
+    
+    // Create new customer
+    const newCust={
+      id:Date.now(),
+      name,
+      company:document.getElementById('newCustCompany').value.trim(),
+      phone,
+      email,
+      addr
+    };
+    customers.push(newCust);
+    cid=newCust.id;
+    showToast('New customer added!','success');
+  }
+  
+  const paid=parseFloat(document.getElementById('billPaid').value)||0;
+  const tot=billItems.reduce((s,i)=>s+i.a,0);
+  const totalCost=billItems.reduce((s,i)=>s+i.cost,0);
+  
+  let status='pending';
+  if(paid>=tot)status='paid';
+  else if(paid>0)status='partial';
+  
+  billItems.forEach(item=>{
+    const p=products.find(x=>x.id===item.pid);
+    if(p)p.stock=Math.max(0,p.stock-item.q);
+  });
+  
+  bills.push({
+    id:Date.now(),
+    no,
+    cid:cid?parseInt(cid):null,
+    items:billItems,
+    total:tot,
+    cost:totalCost,
+    paid,
+    status,
+    by:user.id,
+    date:new Date().toISOString(),
+    paymentMethod:document.getElementById('billPaymentMethod').value,
+    parchas:currentParchas.length>0?currentParchas.map(p=>p.dataURL):null
+  });
+  
+  save();
+  closeModal();
+  showToast('Bill created successfully!');
+  renderAllPages();
+  
+  return false;
+}
+
+function viewBill(id){
+  const b=bills.find(x=>x.id===id);
+  if(!b)return;
+  
+  const c=customers.find(x=>x.id===b.cid);
+  const creator=users.find(x=>x.id===b.by);
+  const profit=b.total-(b.cost||0);
+  
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Bill #${b.no||b.id}</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <div style="padding:20px;background:var(--bg-card);border-radius:12px;border:1px solid var(--border)">
+      <div style="text-align:center;border-bottom:2px solid var(--border);padding-bottom:14px;margin-bottom:16px">
+        <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px">${SHOP_INFO.name}</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:6px">${SHOP_INFO.address}</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">Phone: ${SHOP_INFO.phone}</div>
+      </div>
+      
+      <div style="display:flex;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <strong>Bill:</strong> #${b.no||b.id}<br>
+          <strong>Date:</strong> ${new Date(b.date).toLocaleDateString('en-IN')}
+        </div>
+        <div style="text-align:right">
+          <strong>By:</strong><br>${creator?creator.name:'N/A'}
+        </div>
+      </div>
+      
+      ${c?`
+      <div style="padding:12px;background:rgba(0,122,255,0.05);border-radius:10px;margin-bottom:16px;border:1px solid rgba(0,122,255,0.2)">
+        <strong>Customer:</strong><br>
+        ${c.name}<br>
+        ${c.phone?`Phone: ${c.phone}<br>`:''}
+        ${c.email?`Email: ${c.email}<br>`:''}
+        ${c.addr?`Address: ${c.addr}`:''}
+      </div>
+      `:'<div style="margin-bottom:16px"><strong>Customer:</strong> Walk-in</div>'}
+      
+      <table style="width:100%;margin:16px 0">
+        <tr>
+          <th style="text-align:left">Item</th>
+          <th style="text-align:center">Qty</th>
+          <th style="text-align:right">Rate</th>
+          <th style="text-align:right">Amount</th>
+        </tr>
+        ${b.items.map(i=>`
+          <tr>
+            <td style="padding:10px 0">
+              <strong>${i.code}</strong><br>
+              <span style="font-size:11px;color:var(--text-secondary)">${i.name}</span>
+            </td>
+            <td style="text-align:center">${i.q} ${i.unit}</td>
+            <td style="text-align:right">₹${i.r}</td>
+            <td style="text-align:right"><strong>₹${i.a.toLocaleString()}</strong></td>
+          </tr>
+        `).join('')}
+      </table>
+      
+      <div style="border-top:2px solid var(--border);margin-top:16px;padding-top:16px">
+        <div class="flex" style="margin-bottom:8px">
+          <strong style="font-size:16px">TOTAL:</strong>
+          <strong style="font-size:20px;font-weight:800">₹${b.total.toLocaleString()}</strong>
+        </div>
+        <div class="flex" style="color:#34c759">
+          <strong>PAID:</strong>
+          <strong>₹${b.paid.toLocaleString()}</strong>
+        </div>
+        ${b.status!=='paid'?`
+          <div class="flex" style="color:#ff3b30;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)">
+            <strong>PENDING:</strong>
+            <strong>₹${(b.total-b.paid).toLocaleString()}</strong>
+          </div>
+        `:''}
+      </div>
+      
+      <div style="text-align:center;margin-top:20px;padding-top:16px;border-top:1px dashed var(--border);font-size:12px;color:var(--text-secondary)">
+        Thank you for your business
+      </div>
+    </div>
+    <div class="btn-group" style="margin-top:16px">
+      <button class="btn btn-sm btn-success" onclick="downloadBillPDF(${id})">⬇️ Download PDF</button>
+    </div>
+  `);
+}
+
+function buildBillHTML(billId){
+  const b=bills.find(x=>x.id===billId);
+  if(!b) return '';
+  const c=customers.find(x=>x.id===b.cid);
+  const cr=users.find(x=>x.id===b.by);
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bill #${b.no||b.id}</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Arial,sans-serif;background:#fff;color:#000;padding:30px;max-width:700px;margin:0 auto}
+    .shop-name{font-size:22px;font-weight:900;text-align:center;letter-spacing:-0.5px;margin-bottom:4px}
+    .shop-info{font-size:12px;text-align:center;color:#555;margin-bottom:4px}
+    .divider{border:none;border-top:2px solid #000;margin:14px 0}
+    .divider-dashed{border:none;border-top:1px dashed #aaa;margin:12px 0}
+    .row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px}
+    .label{color:#555}
+    .cust-box{background:#f5f5f5;padding:12px;border-radius:6px;margin:12px 0;font-size:13px;line-height:1.8}
+    table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+    th{background:#f0f0f0;padding:10px 8px;text-align:left;font-weight:700;border-bottom:2px solid #ddd}
+    td{padding:10px 8px;border-bottom:1px solid #eee}
+    .total-section{margin-top:14px;padding-top:14px;border-top:2px solid #000}
+    .total-row{display:flex;justify-content:space-between;font-size:15px;font-weight:700;margin-bottom:6px}
+    .paid-row{display:flex;justify-content:space-between;font-size:13px;color:#28a745;margin-bottom:6px}
+    .pending-row{display:flex;justify-content:space-between;font-size:13px;color:#dc3545;margin-bottom:6px}
+    .footer{text-align:center;font-size:12px;color:#777;margin-top:24px;padding-top:12px;border-top:1px dashed #aaa}
+    .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;text-transform:uppercase}
+    .badge-paid{background:#d4edda;color:#155724}
+    .badge-pending{background:#f8d7da;color:#721c24}
+    .badge-partial{background:#fff3cd;color:#856404}
+    @media print{body{padding:10px}.no-print{display:none}}
+  </style></head><body>
+  <div class="shop-name">${SHOP_INFO.name}</div>
+  <div class="shop-info">${SHOP_INFO.address}</div>
+  <div class="shop-info">Phone: ${SHOP_INFO.phone}</div>
+  <hr class="divider">
+  <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px">
+    <div><strong>Bill No:</strong> #${b.no||b.id}<br><strong>Date:</strong> ${new Date(b.date).toLocaleDateString('en-IN')}<br><strong>By:</strong> ${cr?cr.name:'N/A'}</div>
+    <div style="text-align:right"><span class="badge badge-${b.status}">${b.status.toUpperCase()}</span></div>
+  </div>
+  ${c?`<div class="cust-box"><strong>Customer:</strong> ${c.name}<br>${c.phone?'Phone: '+c.phone+'<br>':''}${c.addr?'Address: '+c.addr:''}</div>`:'<div style="font-size:13px;margin-bottom:8px"><strong>Customer:</strong> Walk-in</div>'}
+  <table>
+    <thead><tr><th>Item</th><th>Code</th><th>Qty</th><th>Rate</th><th style="text-align:right">Amount</th></tr></thead>
+    <tbody>${b.items.map(i=>`<tr><td>${i.name}</td><td>${i.code}</td><td>${i.q} ${i.unit}</td><td>₹${i.r.toLocaleString()}</td><td style="text-align:right;font-weight:700">₹${i.a.toLocaleString()}</td></tr>`).join('')}</tbody>
+  </table>
+  <div class="total-section">
+    <div class="total-row"><span>TOTAL</span><span>₹${b.total.toLocaleString()}</span></div>
+    <div class="paid-row"><span>Paid</span><span>₹${b.paid.toLocaleString()}</span></div>
+    ${b.status!=='paid'?`<div class="pending-row"><span>Pending</span><span>₹${(b.total-b.paid).toLocaleString()}</span></div>`:''}
+  </div>
+  <div class="footer">Thank you for your business!</div>
+  <div class="no-print" style="margin-top:24px;text-align:center">
+    <button onclick="window.print()" style="padding:12px 28px;background:#007aff;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-right:10px">🖨️ Print / Save as PDF</button>
+    <button onclick="window.close()" style="padding:12px 28px;background:#eee;color:#333;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer">✕ Close</button>
+  </div>
+  </body></html>`;
+}
+
+function viewBillPDF(billId){
+  const html=buildBillHTML(billId);
+  if(!html){showToast('Bill not found','error');return;}
+  const blob=new Blob([html],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  window.open(url,'_blank');
+}
+
+function downloadBillPDF(billId){
+  const b=bills.find(x=>x.id===billId);
+  if(!b){showToast('Bill not found','error');return;}
+  showLoading(true);
+  try{
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF();
+    const c=customers.find(x=>x.id===b.cid);
+    const cr=users.find(x=>x.id===b.by);
+    doc.setFontSize(18);doc.setFont(undefined,'bold');
+    doc.text(SHOP_INFO.name,105,18,'center');
+    doc.setFontSize(9);doc.setFont(undefined,'normal');
+    doc.text(SHOP_INFO.address,105,25,'center');
+    doc.text('Phone: '+SHOP_INFO.phone,105,30,'center');
+    doc.setDrawColor(0);doc.setLineWidth(0.6);doc.line(10,34,200,34);
+    doc.setFontSize(10);
+    doc.text('Bill No: #'+(b.no||b.id),10,42);
+    doc.text('Date: '+new Date(b.date).toLocaleDateString('en-IN'),10,48);
+    doc.text('By: '+(cr?cr.name:'N/A'),10,54);
+    doc.text('Status: '+b.status.toUpperCase(),150,42);
+    if(c){doc.text('Customer: '+c.name,10,62);if(c.phone)doc.text('Phone: '+c.phone,10,68);}
+    doc.line(10,74,200,74);
+    let y=82;
+    doc.setFont(undefined,'bold');
+    doc.text('Item',10,y);doc.text('Code',95,y);doc.text('Qty',120,y);doc.text('Rate',145,y);doc.text('Amount',175,y);
+    doc.setLineWidth(0.3);doc.line(10,y+3,200,y+3);
+    y+=10;doc.setFont(undefined,'normal');
+    b.items.forEach(item=>{
+      doc.text(item.name.substring(0,28),10,y);
+      doc.text(item.code,95,y);
+      doc.text(String(item.q)+' '+item.unit,120,y);
+      doc.text('Rs.'+item.r.toLocaleString(),145,y);
+      doc.text('Rs.'+item.a.toLocaleString(),175,y);
+      y+=8;if(y>270){doc.addPage();y=20;}
+    });
+    doc.line(10,y,200,y);y+=8;
+    doc.setFont(undefined,'bold');doc.setFontSize(12);
+    doc.text('TOTAL:',140,y);doc.text('Rs.'+b.total.toLocaleString(),175,y);y+=8;
+    doc.setFontSize(10);doc.setFont(undefined,'normal');
+    doc.setTextColor(40,160,80);doc.text('Paid: Rs.'+b.paid.toLocaleString(),140,y);y+=7;
+    if(b.status!=='paid'){doc.setTextColor(200,30,30);doc.text('Pending: Rs.'+(b.total-b.paid).toLocaleString(),140,y);}
+    doc.setTextColor(0,0,0);
+    doc.setFontSize(9);doc.setFont(undefined,'italic');
+    doc.text('Thank you for your business!',105,280,'center');
+    doc.save('Bill_'+(b.no||b.id)+'.pdf');
+    showToast('PDF downloaded!');
+  }catch(err){showToast('PDF error: '+err.message,'error');}
+  finally{showLoading(false);}
+}
+
+function showPurchases(){
+  let html=`
+    <button class="btn" onclick="openNewPurchase()">Record Purchase</button>
+    <div id="purchasesList">
+  `;
+  
+  if(purchases.length===0){
+    html+=`
+      <div class="empty-state">
+        <div class="icon">📦</div>
+        <div class="title">No Purchases Yet</div>
+        <div class="desc">Record your first purchase</div>
+      </div>
+    `;
+  }else{
+    html+=purchases.slice().reverse().map((p,idx)=>{
+      const s=suppliers.find(x=>x.id===p.supplierId);
+      return`
+        <div class="item slide-up" style="animation-delay:${idx*0.005}s">
+          <div class="flex" style="margin-bottom:10px">
+            <div>
+              <span style="font-weight:700;color:#007aff;font-size:16px">Purchase #${p.id}</span>
+              <span style="margin-left:12px;font-size:13px;color:var(--text-secondary)">${new Date(p.date).toLocaleDateString('en-IN')}</span>
+            </div>
+            <span style="font-weight:800;font-size:18px;color:#ff3b30">₹${p.total.toLocaleString()}</span>
+          </div>
+          <div style="font-size:14px;color:var(--text-primary)">
+            <strong>Supplier:</strong> ${s?s.name:'N/A'} • <strong>Items:</strong> ${p.items.length}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  html+=`</div>`;
+  document.getElementById('page2').innerHTML=html;
+}
+
+// NEW: Working purchase form
+let purchaseItems=[];
+
+function openNewPurchase(){
+  purchaseItems=[];
+  
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Record Purchase</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <form onsubmit="return createPurchase(event)">
+      <div class="form-group">
+        <label>Supplier *</label>
+        <select id="purchSupp" required>
+          <option value="">Select Supplier</option>
+          ${suppliers.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}
+        </select>
+      </div>
+      
+      <div style="background:rgba(0,122,255,0.05);padding:16px;border-radius:12px;margin-bottom:20px;border:1px solid rgba(0,122,255,0.2)">
+        <div style="font-weight:700;margin-bottom:14px">Add Purchased Items</div>
+        
+        <div class="form-group">
+          <label>Product</label>
+          <select id="purchProd">
+            <option value="">Select Product</option>
+            ${products.map(p=>`<option value="${p.id}" data-code="${p.code}" data-name="${p.name}" data-unit="${p.unit}">${p.code} - ${p.name}</option>`).join('')}
+          </select>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" id="purchQty" step="0.1" min="0.1" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label>Cost Price (₹)</label>
+            <input type="number" id="purchCost" step="0.1" min="0" placeholder="0">
+          </div>
+        </div>
+        
+        <button type="button" class="btn btn-sm" onclick="addPurchItem()">Add Item</button>
+        <div id="purchItems"></div>
+      </div>
+      
+      <button type="submit" class="btn btn-success">Save Purchase</button>
+    </form>
+  `);
+}
+
+function addPurchItem(){
+  const sel=document.getElementById('purchProd');
+  const pid=parseInt(sel.value);
+  const q=parseFloat(document.getElementById('purchQty').value);
+  const cost=parseFloat(document.getElementById('purchCost').value);
+  
+  if(!pid){showToast('Select product','error');return}
+  if(!q||q<=0){showToast('Enter quantity','error');return}
+  if(!cost||cost<=0){showToast('Enter cost','error');return}
+  
+  const opt=sel.options[sel.selectedIndex];
+  const code=opt.getAttribute('data-code');
+  const name=opt.getAttribute('data-name');
+  const unit=opt.getAttribute('data-unit');
+  
+  purchaseItems.push({pid,code,name,q,cost,unit,total:q*cost});
+  
+  document.getElementById('purchQty').value='';
+  document.getElementById('purchCost').value='';
+  document.getElementById('purchProd').value='';
+  
+  updatePurchItems();
+  showToast('Item added','success');
+}
+
+function updatePurchItems(){
+  const tot=purchaseItems.reduce((s,i)=>s+i.total,0);
+  
+  document.getElementById('purchItems').innerHTML=`
+    <div style="margin-top:18px">
+      ${purchaseItems.map((i,idx)=>`
+        <div class="item-line">
+          <div class="flex">
+            <div style="flex:1">
+              <div style="font-weight:700;font-size:15px">${i.code} - ${i.name}</div>
+              <div style="font-size:13px;color:var(--text-secondary);margin-top:4px">${i.q} ${i.unit} × ₹${i.cost} = ₹${i.total.toLocaleString()}</div>
+            </div>
+            <button type="button" onclick="removePurchItem(${idx})" style="background:#ff3b30;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:600">Remove</button>
+          </div>
+        </div>
+      `).join('')}
+      ${purchaseItems.length>0?`
+        <div style="background:rgba(255,59,48,0.15);backdrop-filter:blur(20px);padding:16px;border-radius:12px;margin-top:16px;border:1px solid rgba(255,59,48,0.3)">
+          <div class="flex">
+            <span style="font-size:15px;font-weight:700">TOTAL COST</span>
+            <span style="font-size:26px;font-weight:800;letter-spacing:-1px">₹${tot.toLocaleString()}</span>
+          </div>
+        </div>
+      `:'<div style="text-align:center;color:var(--text-secondary);padding:20px">No items added</div>'}
+    </div>
+  `;
+}
+
+function removePurchItem(idx){
+  purchaseItems.splice(idx,1);
+  updatePurchItems();
+}
+
+function createPurchase(e){
+  e.preventDefault();
+  
+  if(purchaseItems.length===0){
+    showToast('Add at least one item','error');
+    return false;
+  }
+  
+  const suppId=parseInt(document.getElementById('purchSupp').value);
+  const tot=purchaseItems.reduce((s,i)=>s+i.total,0);
+  
+  purchaseItems.forEach(item=>{
+    const p=products.find(x=>x.id===item.pid);
+    if(p){
+      p.stock+=item.q;
+      p.costPrice=item.cost;
+    }
+  });
+  
+  purchases.push({
+    id:Date.now(),
+    supplierId:suppId,
+    items:purchaseItems,
+    total:tot,
+    date:new Date().toISOString()
+  });
+  
+  save();
+  closeModal();
+  showToast('Purchase recorded successfully');
+  renderAllPages();
+  
+  return false;
+}
+
+// Continuing with other functions (I'll complete in the response due to length limit)
+
+function showProducts(){
+  let html='';
+  if(user.role!=='staff'){
+    html+=`<button class="btn" onclick="openNewProduct()">Add Product</button>`;
+  }
+  
+  html+=`<input type="text" class="search-box" placeholder="Search products..." oninput="searchProducts(this.value)">`;
+  html+=`<div id="productsList">`;
+  
+  html+=products.map((p,idx)=>{
+    const margin=p.sellPrice-p.costPrice;
+    const marginPct=p.costPrice>0?((margin/p.costPrice)*100).toFixed(1):0;
+    return`
+    <div class="item product-item slide-up" style="animation-delay:${idx*0.01}s">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:16px;margin-bottom:4px;color:var(--text-primary)">${p.name}</div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">${p.code} • ${p.cat.toUpperCase()}</div>
+          ${user.role!=='staff'?`
+            <div style="font-size:14px;line-height:1.7">
+              <span style="color:var(--text-secondary)">Cost:</span> <span style="color:var(--text-primary)">₹${p.costPrice}</span> • 
+              <span style="color:#007aff;font-weight:700">Sell: ₹${p.sellPrice}</span><br>
+              <span class="profit-positive">Margin: ₹${margin} (${marginPct}%)</span> • 
+              <span style="font-weight:700;color:${p.stock<50?'#ff3b30':'#34c759'}">Stock: ${p.stock} ${p.unit}</span>
+            </div>
+          `:`<div style="font-size:15px;color:#007aff;font-weight:700">₹${p.sellPrice}/${p.unit}</div>`}
+        </div>
+        ${user.role!=='staff'?`<button class="btn btn-sm btn-edit" style="margin:0;width:auto;flex-shrink:0" onclick="openEditProduct(${p.id})">Edit</button>`:''}
+      </div>
+    </div>
+  `}).join('');
+  
+  html+=`</div>`;
+  document.getElementById('page3').innerHTML=html;
+}
+
+function searchProducts(term){
+  const items=document.querySelectorAll('.product-item');
+  term=term.toLowerCase();
+  items.forEach(item=>{
+    item.style.display=item.textContent.toLowerCase().includes(term)?'block':'none';
+  });
+}
+
+// NEW: Working add product
+function openNewProduct(){
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Add New Product</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <form onsubmit="return addProduct(event)">
+      <div class="form-group">
+        <label>Product Code *</label>
+        <input id="prodCode" required placeholder="e.g., CERREF">
+      </div>
+      <div class="form-group">
+        <label>Product Name *</label>
+        <input id="prodName" required placeholder="e.g., Ceramic Tiles">
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select id="prodCat">
+          <option value="tiles">Tiles</option>
+          <option value="marble">Marble</option>
+          <option value="granite">Granite</option>
+          <option value="cement">Cement</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Unit *</label>
+          <select id="prodUnit">
+            <option value="sqft">Sq.Ft</option>
+            <option value="pcs">Pieces</option>
+            <option value="box">Box</option>
+            <option value="bag">Bag</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Initial Stock *</label>
+          <input type="number" id="prodStock" min="0" value="0" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Cost Price (₹) *</label>
+          <input type="number" id="prodCost" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Sell Price (₹) *</label>
+          <input type="number" id="prodSell" min="0" step="0.01" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success">Add Product</button>
+    </form>
+  `);
+}
+
+function addProduct(e){
+  e.preventDefault();
+  products.push({
+    id:Date.now(),
+    code:document.getElementById('prodCode').value.toUpperCase().trim(),
+    name:document.getElementById('prodName').value.trim(),
+    cat:document.getElementById('prodCat').value,
+    unit:document.getElementById('prodUnit').value,
+    costPrice:parseFloat(document.getElementById('prodCost').value),
+    sellPrice:parseFloat(document.getElementById('prodSell').value),
+    stock:parseInt(document.getElementById('prodStock').value)
+  });
+  save();
+  closeModal();
+  showToast('Product added successfully');
+  renderAllPages();
+  return false;
+}
+
+function openEditProduct(id){
+  const p=products.find(x=>x.id===id);
+  if(!p) return;
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Edit Product</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <form onsubmit="return saveProduct(event,${id})">
+      <div class="form-group">
+        <label>Product Code *</label>
+        <input id="epCode" required value="${p.code}">
+      </div>
+      <div class="form-group">
+        <label>Product Name *</label>
+        <input id="epName" required value="${p.name}">
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select id="epCat">
+          <option value="tiles" ${p.cat==='tiles'?'selected':''}>Tiles</option>
+          <option value="cement" ${p.cat==='cement'?'selected':''}>Cement</option>
+          <option value="marble" ${p.cat==='marble'?'selected':''}>Marble</option>
+          <option value="granite" ${p.cat==='granite'?'selected':''}>Granite</option>
+          <option value="other" ${p.cat==='other'?'selected':''}>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Unit *</label>
+        <select id="epUnit">
+          <option ${p.unit==='sqft'?'selected':''}>sqft</option>
+          <option ${p.unit==='pcs'?'selected':''}>pcs</option>
+          <option ${p.unit==='box'?'selected':''}>box</option>
+          <option ${p.unit==='bag'?'selected':''}>bag</option>
+          <option ${p.unit==='kg'?'selected':''}>kg</option>
+          <option ${p.unit==='meter'?'selected':''}>meter</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Cost Price (₹) *</label>
+          <input type="number" id="epCost" min="0" step="0.01" required value="${p.costPrice}">
+        </div>
+        <div class="form-group">
+          <label>Sell Price (₹) *</label>
+          <input type="number" id="epSell" min="0" step="0.01" required value="${p.sellPrice}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Stock *</label>
+        <input type="number" id="epStock" min="0" required value="${p.stock}">
+      </div>
+      <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+  `);
+}
+
+function saveProduct(e,id){
+  e.preventDefault();
+  const idx=products.findIndex(x=>x.id===id);
+  if(idx===-1) return false;
+  products[idx]={
+    ...products[idx],
+    code:document.getElementById('epCode').value.toUpperCase().trim(),
+    name:document.getElementById('epName').value.trim(),
+    cat:document.getElementById('epCat').value,
+    unit:document.getElementById('epUnit').value,
+    costPrice:parseFloat(document.getElementById('epCost').value),
+    sellPrice:parseFloat(document.getElementById('epSell').value),
+    stock:parseInt(document.getElementById('epStock').value)
+  };
+  save();
+  closeModal();
+  showToast('Product updated successfully');
+  renderAllPages();
+  return false;
+}
+
+function showCustomers(){
+  let html=`<button class="btn" onclick="openNewCustomer()">Add Customer</button>`;
+  html+=`<input type="text" class="search-box" placeholder="Search customers..." oninput="searchCustomers(this.value)">`;
+  html+=`<div id="customersList">`;
+  
+  if(customers.length===0){
+    html+=`
+      <div class="empty-state">
+        <div class="icon">👤</div>
+        <div class="title">No Customers</div>
+        <div class="desc">Add your first customer</div>
+      </div>
+    `;
+  }else{
+    html+=customers.map((c,idx)=>`
+      <div class="card customer-item slide-up" style="animation-delay:${idx*0.005}s">
+        <div style="font-weight:800;font-size:17px;margin-bottom:10px;color:#007aff">${c.name}${c.company?' ('+c.company+')':''}</div>
+        <div style="font-size:14px;color:var(--text-primary);line-height:1.8;margin-bottom:12px">
+          ${c.company?`<strong>Company:</strong> ${c.company}<br>`:''}
+          <strong>Phone:</strong> ${c.phone}<br>
+          ${c.email?`<strong>Email:</strong> ${c.email}<br>`:''}
+          ${c.addr?`<strong>Address:</strong> ${c.addr}`:''}
+        </div>
+        ${user.role==='admin'||user.role==='manager'?`<button class="btn-compact btn-compact-edit" onclick="openEditCustomer(${c.id})">Edit</button>`:''}
+      </div>
+    `).join('');
+  }
+  
+  html+=`</div>`;
+  document.getElementById('page4').innerHTML=html;
+}
+
+function searchCustomers(term){
+  const items=document.querySelectorAll('.customer-item');
+  term=term.toLowerCase();
+  items.forEach(item=>{
+    item.style.display=item.textContent.toLowerCase().includes(term)?'block':'none';
+  });
+}
+
+// NEW: Working add customer
+function openNewCustomer(){
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Add Customer</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <form onsubmit="return addCustomer(event)">
+      <div class="form-group">
+        <label>Customer Name *</label>
+        <input id="custName" required placeholder="Enter name">
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input id="custPhone" required placeholder="Enter phone">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="custEmail" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <textarea id="custAddr" rows="3" placeholder="Enter address"></textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Add Customer</button>
+    </form>
+  `);
+}
+
+function addCustomer(e){
+  e.preventDefault();
+  customers.push({
+    id:Date.now(),
+    name:document.getElementById('custName').value.trim(),
+    phone:document.getElementById('custPhone').value.trim(),
+    email:document.getElementById('custEmail').value.trim(),
+    addr:document.getElementById('custAddr').value.trim()
+  });
+  save();
+  closeModal();
+  showToast('Customer added successfully');
+  renderAllPages();
+  return false;
+}
+function openEditCustomer(id){
+  const c=customers.find(x=>x.id===id);
+  if(!c)return;
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Edit Customer</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <form onsubmit="return saveCustomer(event,${id})">
+      <div class="form-group">
+        <label>Customer Name *</label>
+        <input id="editCustName" required value="${c.name}">
+      </div>
+      <div class="form-group">
+        <label>Company (Optional)</label>
+        <input id="editCustCompany" value="${c.company||''}">
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input id="editCustPhone" required value="${c.phone}">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="editCustEmail" value="${c.email||''}">
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <textarea id="editCustAddr" rows="3">${c.addr||''}</textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+  `);
+}
+
+function saveCustomer(e,id){
+  e.preventDefault();
+  const c=customers.find(x=>x.id===id);
+  if(!c)return false;
+  c.name=document.getElementById('editCustName').value.trim();
+  c.company=document.getElementById('editCustCompany').value.trim();
+  c.phone=document.getElementById('editCustPhone').value.trim();
+  c.email=document.getElementById('editCustEmail').value.trim();
+  c.addr=document.getElementById('editCustAddr').value.trim();
+  save();
+  closeModal();
+  showToast('Customer updated successfully');
+  renderAllPages();
+  return false;
+}
+
+
+function showSuppliers(){
+  let html=`<button class="btn" onclick="openNewSupplier()">Add Supplier</button>`;
+  html+=`<div id="suppliersList">`;
+  
+  if(suppliers.length===0){
+    html+=`
+      <div class="empty-state">
+        <div class="icon">🏭</div>
+        <div class="title">No Suppliers</div>
+        <div class="desc">Add your first supplier</div>
+      </div>
+    `;
+  }else{
+    html+=suppliers.map((s,idx)=>`
+      <div class="card slide-up" style="animation-delay:${idx*0.005}s">
+        <div style="font-weight:800;font-size:17px;margin-bottom:10px;color:#007aff">${s.name}</div>
+        <div style="font-size:14px;color:var(--text-primary);line-height:1.8;margin-bottom:12px">
+          <strong>Phone:</strong> ${s.phone}<br>
+          ${s.company?`<strong>Company:</strong> ${s.company}<br>`:''}
+          ${s.email?`<strong>Email:</strong> ${s.email}<br>`:''}
+          ${s.addr?`<strong>Address:</strong> ${s.addr}`:''}
+        </div>
+        ${user.role==='admin'||user.role==='manager'?`<button class="btn-compact btn-compact-edit" onclick="openEditSupplier(${s.id})">Edit</button>`:''}
+      </div>
+    `).join('');
+  }
+  
+  html+=`</div>`;
+  document.getElementById('page5').innerHTML=html;
+}
+
+// NEW: Working add supplier
+function openNewSupplier(){
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Add Supplier</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <form onsubmit="return addSupplier(event)">
+      <div class="form-group">
+        <label>Supplier Name *</label>
+        <input id="suppName" required placeholder="Enter name">
+      </div>
+      <div class="form-group">
+        <label>Company Name</label>
+        <input id="suppComp" placeholder="Enter company">
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input id="suppPhone" required placeholder="Enter phone">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="suppEmail" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <textarea id="suppAddr" rows="3" placeholder="Enter address"></textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Add Supplier</button>
+    </form>
+  `);
+}
+
+function addSupplier(e){
+  e.preventDefault();
+  suppliers.push({
+    id:Date.now(),
+    name:document.getElementById('suppName').value.trim(),
+    company:document.getElementById('suppComp').value.trim(),
+    phone:document.getElementById('suppPhone').value.trim(),
+    email:document.getElementById('suppEmail').value.trim(),
+    addr:document.getElementById('suppAddr').value.trim()
+  });
+  save();
+  closeModal();
+  showToast('Supplier added successfully');
+  renderAllPages();
+  return false;
+}
+function openEditSupplier(id){
+  if(user.role!=='admin'&&user.role!=='manager'){
+    showToast('Only managers and admins can edit suppliers','error');
+    return;
+  }
+  const s=suppliers.find(x=>x.id===id);
+  if(!s)return;
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Edit Supplier</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <form onsubmit="return saveSupplier(event,${id})">
+      <div class="form-group">
+        <label>Supplier Name *</label>
+        <input id="editSuppName" required value="${s.name}">
+      </div>
+      <div class="form-group">
+        <label>Company Name</label>
+        <input id="editSuppComp" value="${s.company||''}">
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input id="editSuppPhone" required value="${s.phone}">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="editSuppEmail" value="${s.email||''}">
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <textarea id="editSuppAddr" rows="3">${s.addr||''}</textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+  `);
+}
+
+function saveSupplier(e,id){
+  e.preventDefault();
+  if(user.role!=='admin'&&user.role!=='manager'){
+    showToast('Unauthorized','error');
+    return false;
+  }
+  const s=suppliers.find(x=>x.id===id);
+  if(!s)return false;
+  s.name=document.getElementById('editSuppName').value.trim();
+  s.company=document.getElementById('editSuppComp').value.trim();
+  s.phone=document.getElementById('editSuppPhone').value.trim();
+  s.email=document.getElementById('editSuppEmail').value.trim();
+  s.addr=document.getElementById('editSuppAddr').value.trim();
+  save();
+  closeModal();
+  showToast('Supplier updated successfully');
+  renderAllPages();
+  return false;
+}
+
+
+function showAccounting(){
+  console.log('=== ACCOUNTING DEBUG ===');
+  console.log('Bills array length:', bills.length);
+  console.log('Purchases array length:', purchases.length);
+  
+  // Check if we have any bills at all
+  if(bills.length===0){
+    console.log('⚠️ WARNING: No bills found in system!');
+    console.log('localStorage amanBills:', localStorage.getItem('amanBills'));
+  }else{
+    console.log('First bill sample:', bills[0]);
+  }
+  
+  const totalPurchases=purchases.reduce((s,p)=>s+p.total,0);
+  const totalSales=bills.reduce((s,b)=>s+b.total,0);
+  const totalProfit=totalSales-bills.reduce((s,b)=>s+(b.cost||0),0);
+  const balance=totalSales-totalPurchases;
+  
+  console.log('Calculated totalSales:', totalSales);
+  console.log('Calculated totalPurchases:', totalPurchases);
+  console.log('Calculated totalProfit:', totalProfit);
+  console.log('Calculated balance:', balance);
+  
+  const maxAmount=Math.max(totalSales,totalPurchases,totalProfit,1000);
+  
+  // Calculate bar heights with guaranteed minimums
+  const salesHeight=totalSales>0?Math.max((totalSales/maxAmount*100),20):10;
+  const purchasesHeight=totalPurchases>0?Math.max((totalPurchases/maxAmount*100),20):10;
+  const profitHeight=totalProfit>0?Math.max((totalProfit/maxAmount*100),20):10;
+  
+  console.log('Bar Heights - Sales:', salesHeight, 'Purchases:', purchasesHeight, 'Profit:', profitHeight);
+  console.log('=== END DEBUG ===');
+  
+  let html=`
+    <div class="highlight-box slide-down">
+      <div style="font-size:13px;opacity:0.8;margin-bottom:6px;font-weight:700;letter-spacing:1px;text-transform:uppercase">Net Balance</div>
+      <div style="font-size:40px;font-weight:900;letter-spacing:-2px;margin-bottom:14px">₹${balance.toLocaleString()}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;font-size:14px">
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:800;letter-spacing:-1px">₹${totalSales.toLocaleString()}</div>
+          <div style="opacity:0.8;margin-top:4px;font-size:12px;text-transform:uppercase;font-weight:600;letter-spacing:0.5px">Sales</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:800;letter-spacing:-1px">₹${totalPurchases.toLocaleString()}</div>
+          <div style="opacity:0.8;margin-top:4px;font-size:12px;text-transform:uppercase;font-weight:600;letter-spacing:0.5px">Purchases</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:800;letter-spacing:-1px">₹${totalProfit.toLocaleString()}</div>
+          <div style="opacity:0.8;margin-top:4px;font-size:12px;text-transform:uppercase;font-weight:600;letter-spacing:0.5px">Profit</div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Show helpful message if no data
+  if(bills.length===0 && purchases.length===0){
+    html+=`
+      <div class="card slide-up" style="animation-delay:0.1s;border:2px solid #ff9500;background:rgba(255,149,0,0.05)">
+        <div style="padding:30px 20px;text-align:center">
+          <div style="font-size:50px;margin-bottom:16px">💰</div>
+          <div style="font-size:18px;font-weight:700;color:#ff9500;margin-bottom:12px">No Financial Data Yet</div>
+          <div style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;line-height:1.6">
+            You haven't created any bills or purchases yet.<br>
+            Go to <strong>Sales</strong> to create your first bill!
+          </div>
+          <button class="btn" onclick="goTab(1)" style="margin-top:12px">
+            📋 Create First Bill
+          </button>
+        </div>
+      </div>
+    `;
+  }else{
+    html+=`
+    <!-- Financial Overview Bar Chart -->
+    <div class="card slide-up" style="animation-delay:0.1s">
+      <div class="card-header">📊 Financial Overview</div>
+      <div style="padding:16px">
+        <div style="display:flex;justify-content:space-around;align-items:flex-end;height:200px;border-bottom:2px solid var(--border);padding-bottom:16px;margin-bottom:16px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;margin:0 8px">
+            <div style="width:100%;height:140px;display:flex;align-items:flex-end;justify-content:center">
+              <div style="width:80%;background:linear-gradient(180deg,#30d158,#34c759);border-radius:8px 8px 0 0;height:${salesHeight}%;min-height:20px;display:flex;align-items:center;justify-content:center;transition:all 0.6s ease;flex-direction:column;padding:8px 4px">
+                <span style="font-size:11px;font-weight:900;color:white;opacity:0.9">IN</span>
+              </div>
+            </div>
+            <div style="margin-top:12px;text-align:center">
+              <div style="font-size:11px;font-weight:800;color:#34c759;margin-bottom:4px">SALES</div>
+              <div style="font-size:13px;font-weight:900;color:var(--text-primary);white-space:nowrap">₹${totalSales.toLocaleString()}</div>
+            </div>
+          </div>
+          
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;margin:0 8px">
+            <div style="width:100%;height:140px;display:flex;align-items:flex-end;justify-content:center">
+              <div style="width:80%;background:linear-gradient(180deg,#ff6961,#ff3b30);border-radius:8px 8px 0 0;height:${purchasesHeight}%;min-height:20px;display:flex;align-items:center;justify-content:center;transition:all 0.6s ease;flex-direction:column;padding:8px 4px">
+                <span style="font-size:11px;font-weight:900;color:white;opacity:0.9">OUT</span>
+              </div>
+            </div>
+            <div style="margin-top:12px;text-align:center">
+              <div style="font-size:11px;font-weight:800;color:#ff3b30;margin-bottom:4px">PURCHASES</div>
+              <div style="font-size:13px;font-weight:900;color:var(--text-primary);white-space:nowrap">₹${totalPurchases.toLocaleString()}</div>
+            </div>
+          </div>
+          
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;margin:0 8px">
+            <div style="width:100%;height:140px;display:flex;align-items:flex-end;justify-content:center">
+              <div style="width:80%;background:linear-gradient(180deg,#0a84ff,#007aff);border-radius:8px 8px 0 0;height:${profitHeight}%;min-height:20px;display:flex;align-items:center;justify-content:center;transition:all 0.6s ease;flex-direction:column;padding:8px 4px">
+                <span style="font-size:11px;font-weight:900;color:white;opacity:0.9">NET</span>
+              </div>
+            </div>
+            <div style="margin-top:12px;text-align:center">
+              <div style="font-size:11px;font-weight:800;color:#007aff;margin-bottom:4px">PROFIT</div>
+              <div style="font-size:13px;font-weight:900;color:var(--text-primary);white-space:nowrap">₹${totalProfit.toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Horizontal Comparison Bars -->
+        <div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:12px;font-weight:700;color:#34c759">Sales Income</span>
+              <span style="font-size:12px;font-weight:800;color:#34c759">${maxAmount>0?(totalSales/maxAmount*100).toFixed(1):0}%</span>
+            </div>
+            <div style="height:20px;background:rgba(52,199,89,0.15);border-radius:10px;overflow:hidden">
+              <div style="height:100%;background:linear-gradient(90deg,#34c759,#30d158);width:${maxAmount>0?(totalSales/maxAmount*100):0}%;transition:width 0.6s ease"></div>
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:12px;font-weight:700;color:#ff3b30">Purchases Expense</span>
+              <span style="font-size:12px;font-weight:800;color:#ff3b30">${maxAmount>0?(totalPurchases/maxAmount*100).toFixed(1):0}%</span>
+            </div>
+            <div style="height:20px;background:rgba(255,59,48,0.15);border-radius:10px;overflow:hidden">
+              <div style="height:100%;background:linear-gradient(90deg,#ff3b30,#ff6961);width:${maxAmount>0?(totalPurchases/maxAmount*100):0}%;transition:width 0.6s ease"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:12px;font-weight:700;color:#007aff">Net Profit</span>
+              <span style="font-size:12px;font-weight:800;color:#007aff">${maxAmount>0?(totalProfit/maxAmount*100).toFixed(1):0}%</span>
+            </div>
+            <div style="height:20px;background:rgba(0,122,255,0.15);border-radius:10px;overflow:hidden">
+              <div style="height:100%;background:linear-gradient(90deg,#007aff,#0a84ff);width:${maxAmount>0?(totalProfit/maxAmount*100):0}%;transition:width 0.6s ease"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+  }
+  
+  html+=`
+    <div class="time-filter">
+      <button class="time-btn active" onclick="filterTransactions('all')">All</button>
+      <button class="time-btn" onclick="filterTransactions('sales')">Sales</button>
+      <button class="time-btn" onclick="filterTransactions('purchases')">Purchases</button>
+    </div>
+    
+    <div class="card slide-up" style="animation-delay:0.15s">
+      <div class="card-header">Transaction History</div>
+      <div id="transactionsList" style="max-height:500px;overflow-y:auto">
+  `;
+  
+  const allTrans=[
+    ...bills.map(b=>({type:'sale',date:b.date,desc:`Bill #${b.no||b.id}`,amount:b.total,profit:b.total-(b.cost||0)})),
+    ...purchases.map(p=>({type:'purchase',date:p.date,desc:`Purchase #${p.id}`,amount:p.total}))
+  ].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  
+  if(allTrans.length===0){
+    html+=`
+      <div style="padding:40px 20px;text-align:center">
+        <div style="font-size:60px;margin-bottom:16px">💰</div>
+        <div style="font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:8px">No Transactions Yet</div>
+        <div style="font-size:13px;color:var(--text-secondary)">Create bills or purchases to see transaction history</div>
+      </div>
+    `;
+  }else{
+    html+=allTrans.slice(0,50).map((t,idx)=>`
+      <div class="trans-item ${t.type}" style="display:flex;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);animation:slideUp ${0.005*idx}s ease-out">
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;margin-bottom:4px;color:var(--text-primary);font-size:15px">${t.desc}</div>
+          <div style="font-size:13px;color:var(--text-secondary)">${new Date(t.date).toLocaleDateString('en-IN')} • ${t.type==='sale'?'Sale':'Purchase'}</div>
+          ${t.type==='sale'&&t.profit?`<div style="font-size:12px;color:#34c759;margin-top:3px;font-weight:600">Profit: ₹${t.profit.toLocaleString()}</div>`:''}
+        </div>
+        <div style="font-size:18px;font-weight:900;letter-spacing:-1px;color:${t.type==='sale'?'#34c759':'#ff3b30'};flex-shrink:0;margin-left:12px">
+          ${t.type==='sale'?'+':'-'}₹${t.amount.toLocaleString()}
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  html+=`</div></div>`;
+  document.getElementById('page6').innerHTML=html;
+}
+
+function filterTransactions(filter){
+  document.querySelectorAll('.time-btn').forEach(btn=>btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  const items=document.querySelectorAll('.trans-item');
+  items.forEach(item=>{
+    if(filter==='all'){
+      item.style.display='flex';
+    }else if(filter==='sales'){
+      item.style.display=item.classList.contains('sale')?'flex':'none';
+    }else if(filter==='purchases'){
+      item.style.display=item.classList.contains('purchase')?'flex':'none';
+    }
+  });
+}
+
+function showUsers(){
+  const roleOrder={admin:1,manager:2,staff:3};
+  const sortedUsers=users.slice().sort((a,b)=>roleOrder[a.role]-roleOrder[b.role]);
+  
+  let html=`<button class="btn" onclick="openNewUser()">Add User</button>`;
+  html+=`<div class="card">
+    <div class="card-header">System Users (Sorted by Privilege)</div>
+  `;
+  html+=sortedUsers.map((u,idx)=>`
+    <div class="item slide-up" style="animation-delay:${idx*0.005}s">
+      <div class="flex" style="margin-bottom:10px">
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:16px;margin-bottom:4px;color:var(--text-primary)">${u.name}</div>
+          <div style="font-size:13px;color:var(--text-secondary)">@${u.username}</div>
+        </div>
+        <span class="badge ${u.role}">${u.role.toUpperCase()}</span>
+      </div>
+      ${u.id!==user.id?`
+        <div style="display:flex;gap:6px">
+          <button class="btn-compact btn-compact-edit" onclick="openEditUser(${u.id})">Edit</button>
+          <button class="btn-compact btn-compact-delete" onclick="deleteUser(${u.id})">Delete</button>
+        </div>
+      `:'<div style="font-size:12px;color:#888;font-style:italic">(You cannot edit yourself)</div>'}
+    </div>
+  `).join('');
+  html+=`</div>`;
+  document.getElementById('page7').innerHTML=html;
+}
+
+// NEW: Working add user
+function openNewUser(){
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Add User</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <form onsubmit="return addUser(event)">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input id="userName" required placeholder="Enter name">
+      </div>
+      <div class="form-group">
+        <label>Username *</label>
+        <input id="userUsername" required placeholder="Enter username">
+      </div>
+      <div class="form-group">
+        <label>Password *</label>
+        <input type="password" id="userPassword" required placeholder="Enter password">
+      </div>
+      <div class="form-group">
+        <label>Role *</label>
+        <select id="userRole">
+          <option value="staff">Staff</option>
+          <option value="manager">Manager</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-success">Add User</button>
+    </form>
+  `);
+}
+
+function addUser(e){
+  e.preventDefault();
+  const newUser={
+    id:Date.now(),
+    username:document.getElementById('userUsername').value.trim(),
+    password:document.getElementById('userPassword').value,
+    name:document.getElementById('userName').value.trim(),
+    role:document.getElementById('userRole').value
+  };
+  
+  if(users.find(u=>u.username===newUser.username)){
+    showToast('Username already exists','error');
+    return false;
+  }
+  
+  users.push(newUser);
+  save();
+  closeModal();
+  showToast('User added successfully');
+  renderAllPages();
+  return false;
+}
+function openEditUser(id){
+  if(id===user.id){
+    showToast('You cannot edit yourself','error');
+    return;
+  }
+  const u=users.find(x=>x.id===id);
+  if(!u)return;
+  
+  const roleDescriptions={
+    admin:'Full access to all features, can manage users',
+    manager:'Access to all sections except user management',
+    staff:'Limited access: Sales, Inventory, Customers, Reports'
+  };
+  
+  showModal(`
+    <div class="modal-head">
+      <div class="modal-title">Edit User: ${u.name}</div>
+      <div class="close" onclick="closeModal()">&times;</div>
+    </div>
+    <form onsubmit="return saveUser(event,${id})">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input id="editUserName" required value="${u.name}">
+      </div>
+      <div class="form-group">
+        <label>Username *</label>
+        <input id="editUserUsername" disabled value="${u.username}" style="background:var(--bg-card);opacity:0.6">
+        <div style="font-size:11px;color:#888;margin-top:4px">Username cannot be changed</div>
+      </div>
+      <div class="form-group">
+        <label>New Password (leave empty to keep current)</label>
+        <input type="password" id="editUserPassword" placeholder="Enter new password or leave empty">
+      </div>
+      <div class="form-group">
+        <label>Privilege Level *</label>
+        <select id="editUserRole" onchange="document.getElementById('roleDesc').textContent=this.options[this.selectedIndex].dataset.desc">
+          <option value="staff" data-desc="${roleDescriptions.staff}" ${u.role==='staff'?'selected':''}>Staff</option>
+          <option value="manager" data-desc="${roleDescriptions.manager}" ${u.role==='manager'?'selected':''}>Manager</option>
+          <option value="admin" data-desc="${roleDescriptions.admin}" ${u.role==='admin'?'selected':''}>Admin</option>
+        </select>
+        <div id="roleDesc" style="font-size:12px;color:#888;margin-top:8px;padding:8px;background:rgba(0,122,255,0.05);border-radius:6px">${roleDescriptions[u.role]}</div>
+      </div>
+      <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+  `);
+}
+
+function saveUser(e,id){
+  e.preventDefault();
+  if(id===user.id){
+    showToast('Cannot edit yourself','error');
+    return false;
+  }
+  const u=users.find(x=>x.id===id);
+  if(!u)return false;
+  
+  u.name=document.getElementById('editUserName').value.trim();
+  const newPass=document.getElementById('editUserPassword').value;
+  if(newPass)u.password=newPass;
+  u.role=document.getElementById('editUserRole').value;
+  
+  save();
+  closeModal();
+  showToast('User updated successfully');
+  renderAllPages();
+  return false;
+}
+
+function deleteUser(id){
+  if(id===user.id){
+    showToast('You cannot delete yourself','error');
+    return;
+  }
+  
+  const u=users.find(x=>x.id===id);
+  if(!u)return;
+  
+  if(!confirm(`Delete user "${u.name}" (@${u.username})?\n\nThis action cannot be undone.`))return;
+  
+  const index=users.findIndex(x=>x.id===id);
+  if(index>-1){
+    users.splice(index,1);
+    save();
+    showToast('User deleted successfully','error');
+    renderAllPages();
+  }
+}
+
+let reportPeriod='all';
+
+function showReports(){
+  const now=new Date();
+  const today=now.toDateString();
+  const weekAgo=new Date(now-7*24*60*60*1000);
+  const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
+  
+  let filteredBills=bills;
+  if(reportPeriod==='today'){
+    filteredBills=bills.filter(b=>new Date(b.date).toDateString()===today);
+  }else if(reportPeriod==='week'){
+    filteredBills=bills.filter(b=>new Date(b.date)>=weekAgo);
+  }else if(reportPeriod==='month'){
+    filteredBills=bills.filter(b=>new Date(b.date)>=monthStart);
+  }
+  
+  const myBills=user.role==='staff'?filteredBills.filter(b=>b.by===user.id):filteredBills;
+  const total=myBills.reduce((s,b)=>s+b.total,0);
+  const cost=myBills.reduce((s,b)=>s+(b.cost||0),0);
+  const profit=total-cost;
+  const paid=myBills.reduce((s,b)=>s+b.paid,0);
+  const pending=total-paid;
+  
+  const periodName=reportPeriod==='today'?'Today':reportPeriod==='week'?'This Week':reportPeriod==='month'?'This Month':'All Time';
+  
+  // Product Performance Analysis
+  const productSales={};
+  myBills.forEach(b=>{
+    b.items.forEach(item=>{
+      const p=products.find(x=>x.id===item.pid);
+      if(!p)return;
+      if(!productSales[item.pid]){
+        productSales[item.pid]={product:p,qty:0,revenue:0,profit:0,count:0};
+      }
+      productSales[item.pid].qty+=item.q;
+      productSales[item.pid].revenue+=item.a;
+      productSales[item.pid].profit+=(item.a-item.cost);
+      productSales[item.pid].count++;
+    });
+  });
+  
+  const productStats=Object.values(productSales).sort((a,b)=>b.revenue-a.revenue);
+  const topProducts=productStats.slice(0,5);
+  const worstProducts=productStats.slice(-5).reverse();
+  
+  // Customer Performance Analysis
+  const customerStats={};
+  myBills.forEach(b=>{
+    if(!b.cid)return;
+    if(!customerStats[b.cid]){
+      const c=customers.find(x=>x.id===b.cid);
+      customerStats[b.cid]={customer:c,bills:0,revenue:0,pending:0};
+    }
+    customerStats[b.cid].bills++;
+    customerStats[b.cid].revenue+=b.total;
+    customerStats[b.cid].pending+=(b.total-b.paid);
+  });
+  
+  const topCustomers=Object.values(customerStats).sort((a,b)=>b.revenue-a.revenue).slice(0,5);
+  const regularCustomers=Object.values(customerStats).sort((a,b)=>b.bills-a.bills).slice(0,5);
+  
+  // Bills Status Breakdown
+  const paidBills=myBills.filter(b=>b.status==='paid');
+  const partialBills=myBills.filter(b=>b.status==='partial');
+  const pendingBills=myBills.filter(b=>b.status==='pending');
+  
+  const paidAmount=paidBills.reduce((s,b)=>s+b.total,0);
+  const partialAmount=partialBills.reduce((s,b)=>s+b.total,0);
+  const pendingAmount=pendingBills.reduce((s,b)=>s+b.total,0);
+  
+  const maxRevenue=topProducts.length>0?topProducts[0].revenue:1;
+  const maxCustomerRev=topCustomers.length>0?topCustomers[0].revenue:1;
+  const maxBills=regularCustomers.length>0?regularCustomers[0].bills:1;
+  const maxStatusAmount=Math.max(paidAmount,partialAmount,pendingAmount,1000);
+  
+  // Calculate bar heights with guaranteed minimums
+  const paidHeight=paidAmount>0?Math.max((paidAmount/maxStatusAmount*100),20):10;
+  const partialHeight=partialAmount>0?Math.max((partialAmount/maxStatusAmount*100),20):10;
+  const pendingHeight=pendingAmount>0?Math.max((pendingAmount/maxStatusAmount*100),20):10;
+  
+  console.log('=== REPORTS DEBUG ===');
+  console.log('Report Period:', reportPeriod);
+  console.log('Total bills:', bills.length);
+  console.log('Filtered bills:', filteredBills.length);
+  console.log('My bills:', myBills.length);
+  console.log('Bills:', myBills);
+  console.log('Paid bills:', paidBills.length, 'Amount:', paidAmount);
+  console.log('Partial bills:', partialBills.length, 'Amount:', partialAmount);
+  console.log('Pending bills:', pendingBills.length, 'Amount:', pendingAmount);
+  console.log('Max status amount:', maxStatusAmount);
+  console.log('Bar Heights - Paid:', paidHeight, 'Partial:', partialHeight, 'Pending:', pendingHeight);
+  console.log('=== END DEBUG ===');
+  
+  let html=`
+    <div class="time-filter">
+      <button class="time-btn ${reportPeriod==='today'?'active':''}" onclick="changeReportPeriod('today')">Today</button>
+      <button class="time-btn ${reportPeriod==='week'?'active':''}" onclick="changeReportPeriod('week')">Week</button>
+      <button class="time-btn ${reportPeriod==='month'?'active':''}" onclick="changeReportPeriod('month')">Month</button>
+      <button class="time-btn ${reportPeriod==='all'?'active':''}" onclick="changeReportPeriod('all')">All Time</button>
+    </div>
+    
+    <div class="highlight-box slide-down">
+      <div style="font-size:13px;opacity:0.8;margin-bottom:6px;font-weight:700;letter-spacing:1px;text-transform:uppercase">${periodName} Profit</div>
+      <div style="font-size:40px;font-weight:900;letter-spacing:-2px">₹${profit.toLocaleString()}</div>
+      <div style="font-size:14px;opacity:0.9;margin-top:10px">Sales: ₹${total.toLocaleString()} • Cost: ₹${cost.toLocaleString()}</div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat slide-up" style="animation-delay:0.05s">
+        <div class="stat-val">₹${total.toLocaleString()}</div>
+        <div class="stat-label">Total Sales</div>
+      </div>
+      <div class="stat success slide-up" style="animation-delay:0.1s">
+        <div class="stat-val">₹${profit.toLocaleString()}</div>
+        <div class="stat-label">Profit</div>
+      </div>
+      <div class="stat slide-up" style="animation-delay:0.15s">
+        <div class="stat-val">₹${paid.toLocaleString()}</div>
+        <div class="stat-label">Collected</div>
+      </div>
+      <div class="stat warning slide-up" style="animation-delay:0.2s">
+        <div class="stat-val">₹${pending.toLocaleString()}</div>
+        <div class="stat-label">Pending</div>
+      </div>
+    </div>
+    
+    <!-- Bills Status Bar Chart -->
+    <div class="card slide-up" style="animation-delay:0.25s">
+      <div class="card-header">📊 Bills Status Distribution</div>
+      <div style="padding:16px">
+        <div style="display:flex;justify-content:space-around;align-items:flex-end;height:200px;border-bottom:2px solid var(--border);padding-bottom:16px;margin-bottom:16px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;margin:0 8px">
+            <div style="width:100%;height:140px;display:flex;align-items:flex-end;justify-content:center">
+              <div style="width:80%;background:linear-gradient(180deg,#30d158,#34c759);border-radius:8px 8px 0 0;height:${paidHeight}%;min-height:20px;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;transition:all 0.6s ease">
+                <span style="font-size:14px;font-weight:900;color:white">${paidBills.length}</span>
+              </div>
+            </div>
+            <div style="margin-top:12px;text-align:center">
+              <div style="font-size:11px;font-weight:800;color:#34c759;margin-bottom:4px">PAID</div>
+              <div style="font-size:13px;font-weight:900;color:var(--text-primary);white-space:nowrap">₹${paidAmount.toLocaleString()}</div>
+            </div>
+          </div>
+          
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;margin:0 8px">
+            <div style="width:100%;height:140px;display:flex;align-items:flex-end;justify-content:center">
+              <div style="width:80%;background:linear-gradient(180deg,#ffb340,#ff9500);border-radius:8px 8px 0 0;height:${partialHeight}%;min-height:20px;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;transition:all 0.6s ease">
+                <span style="font-size:14px;font-weight:900;color:white">${partialBills.length}</span>
+              </div>
+            </div>
+            <div style="margin-top:12px;text-align:center">
+              <div style="font-size:11px;font-weight:800;color:#ff9500;margin-bottom:4px">PARTIAL</div>
+              <div style="font-size:13px;font-weight:900;color:var(--text-primary);white-space:nowrap">₹${partialAmount.toLocaleString()}</div>
+            </div>
+          </div>
+          
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;margin:0 8px">
+            <div style="width:100%;height:140px;display:flex;align-items:flex-end;justify-content:center">
+              <div style="width:80%;background:linear-gradient(180deg,#ff6961,#ff3b30);border-radius:8px 8px 0 0;height:${pendingHeight}%;min-height:20px;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;transition:all 0.6s ease">
+                <span style="font-size:14px;font-weight:900;color:white">${pendingBills.length}</span>
+              </div>
+            </div>
+            <div style="margin-top:12px;text-align:center">
+              <div style="font-size:11px;font-weight:800;color:#ff3b30;margin-bottom:4px">PENDING</div>
+              <div style="font-size:13px;font-weight:900;color:var(--text-primary);white-space:nowrap">₹${pendingAmount.toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Horizontal Progress Bars -->
+        <div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:12px;font-weight:700;color:#34c759">Paid Collection</span>
+              <span style="font-size:12px;font-weight:800;color:#34c759">${total>0?(paidAmount/total*100).toFixed(1):0}%</span>
+            </div>
+            <div style="height:20px;background:rgba(52,199,89,0.15);border-radius:10px;overflow:hidden">
+              <div style="height:100%;background:linear-gradient(90deg,#34c759,#30d158);width:${total>0?(paidAmount/total*100):0}%;transition:width 0.6s ease"></div>
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:12px;font-weight:700;color:#ff9500">Partial Payment</span>
+              <span style="font-size:12px;font-weight:800;color:#ff9500">${total>0?(partialAmount/total*100).toFixed(1):0}%</span>
+            </div>
+            <div style="height:20px;background:rgba(255,149,0,0.15);border-radius:10px;overflow:hidden">
+              <div style="height:100%;background:linear-gradient(90deg,#ff9500,#ffb340);width:${total>0?(partialAmount/total*100):0}%;transition:width 0.6s ease"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:12px;font-weight:700;color:#ff3b30">Pending Collection</span>
+              <span style="font-size:12px;font-weight:800;color:#ff3b30">${total>0?(pendingAmount/total*100).toFixed(1):0}%</span>
+            </div>
+            <div style="height:20px;background:rgba(255,59,48,0.15);border-radius:10px;overflow:hidden">
+              <div style="height:100%;background:linear-gradient(90deg,#ff3b30,#ff6961);width:${total>0?(pendingAmount/total*100):0}%;transition:width 0.6s ease"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Category-wise Sales Analysis -->
+    <div class="card slide-up" style="animation-delay:0.28s">
+      <div class="card-header">🏷️ Category-wise Sales</div>
+      ${(()=>{
+        // Calculate sales by category
+        const categorySales={};
+        myBills.forEach(b=>{
+          b.items.forEach(item=>{
+            const p=products.find(x=>x.id===item.pid);
+            if(!p)return;
+            const cat=p.cat||'other';
+            if(!categorySales[cat]){
+              categorySales[cat]={qty:0,revenue:0,profit:0,items:0};
+            }
+            categorySales[cat].qty+=item.q;
+            categorySales[cat].revenue+=item.a;
+            categorySales[cat].profit+=(item.a-item.cost);
+            categorySales[cat].items++;
+          });
+        });
+        
+        const categoryStats=Object.entries(categorySales).map(([cat,data])=>({
+          category:cat,
+          ...data
+        })).sort((a,b)=>b.revenue-a.revenue);
+        
+        const maxCatRevenue=categoryStats.length>0?categoryStats[0].revenue:1;
+        
+        const categoryColors={
+          cement:'#007aff',
+          marble:'#bf5af2',
+          granite:'#ff9500',
+          tiles:'#34c759',
+          other:'#8e8e93'
+        };
+        
+        const categoryIcons={
+          cement:'🏗️',
+          marble:'💎',
+          granite:'🪨',
+          tiles:'◻️',
+          other:'📦'
+        };
+        
+        const categoryNames={
+          cement:'Cement',
+          marble:'Marble',
+          granite:'Granite',
+          tiles:'Tiles',
+          other:'Other'
+        };
+        
+        if(categoryStats.length===0){
+          return `
+            <div style="padding:30px 20px;text-align:center">
+              <div style="font-size:50px;margin-bottom:12px">🏷️</div>
+              <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:6px">No Category Data Yet</div>
+              <div style="font-size:13px;color:var(--text-secondary)">Create bills to see category-wise sales</div>
+            </div>
+          `;
+        }
+        
+        return `
+          <div style="padding:16px">
+            <!-- Bar Chart -->
+            <div style="display:flex;justify-content:space-around;align-items:flex-end;height:200px;border-bottom:2px solid var(--border);padding-bottom:16px;margin-bottom:20px">
+              ${categoryStats.map(cs=>{
+                const height=Math.max((cs.revenue/maxCatRevenue*100),15);
+                const color=categoryColors[cs.category]||'#8e8e93';
+                const icon=categoryIcons[cs.category]||'📦';
+                return `
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;margin:0 6px">
+                    <div style="width:100%;height:140px;display:flex;align-items:flex-end;justify-content:center">
+                      <div style="width:85%;background:linear-gradient(180deg,${color},${color}dd);border-radius:8px 8px 0 0;height:${height}%;min-height:25px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:8px;transition:all 0.6s ease;position:relative">
+                        <div style="font-size:16px;margin-bottom:4px">${icon}</div>
+                        <span style="font-size:12px;font-weight:900;color:white">${cs.items}</span>
+                      </div>
+                    </div>
+                    <div style="margin-top:12px;text-align:center;width:100%">
+                      <div style="font-size:10px;font-weight:800;color:${color};margin-bottom:4px;text-transform:uppercase">${categoryNames[cs.category]||cs.category}</div>
+                      <div style="font-size:12px;font-weight:900;color:var(--text-primary);white-space:nowrap">₹${cs.revenue.toLocaleString()}</div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            
+            <!-- Detailed List -->
+            <div>
+              ${categoryStats.map((cs,i)=>{
+                const color=categoryColors[cs.category]||'#8e8e93';
+                const icon=categoryIcons[cs.category]||'📦';
+                const name=categoryNames[cs.category]||cs.category;
+                return `
+                  <div style="margin-bottom:16px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                      <div style="display:flex;align-items:center;gap:10px">
+                        <div style="font-size:24px">${icon}</div>
+                        <div>
+                          <div style="font-size:14px;font-weight:700;color:var(--text-primary)">${name}</div>
+                          <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">${cs.items} items sold • Profit: ₹${cs.profit.toLocaleString()}</div>
+                        </div>
+                      </div>
+                      <div style="text-align:right">
+                        <div style="font-size:14px;font-weight:800;color:${color}">₹${cs.revenue.toLocaleString()}</div>
+                        <div style="font-size:11px;color:var(--text-secondary)">${(cs.revenue/total*100).toFixed(1)}%</div>
+                      </div>
+                    </div>
+                    <div style="height:8px;background:rgba(${color==='#007aff'?'0,122,255':color==='#bf5af2'?'191,90,242':color==='#ff9500'?'255,149,0':color==='#34c759'?'52,199,89':'142,142,147'},0.15);border-radius:4px;overflow:hidden">
+                      <div style="height:100%;background:linear-gradient(90deg,${color},${color}dd);width:${(cs.revenue/maxCatRevenue*100).toFixed(1)}%;transition:width 0.6s ease"></div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            
+            <!-- Summary Stats -->
+            <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="text-align:center;padding:16px;background:rgba(0,122,255,0.08);border-radius:12px">
+                <div style="font-size:11px;font-weight:800;color:#007aff;margin-bottom:6px;text-transform:uppercase">Categories</div>
+                <div style="font-size:24px;font-weight:900;color:var(--text-primary)">${categoryStats.length}</div>
+              </div>
+              <div style="text-align:center;padding:16px;background:rgba(52,199,89,0.08);border-radius:12px">
+                <div style="font-size:11px;font-weight:800;color:#34c759;margin-bottom:6px;text-transform:uppercase">Items Sold</div>
+                <div style="font-size:24px;font-weight:900;color:var(--text-primary)">${categoryStats.reduce((s,c)=>s+c.items,0)}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      })()}
+    </div>
+    
+    <!-- Top Performing Products (ALWAYS SHOW) -->
+    <div class="card slide-up" style="animation-delay:0.3s">
+      <div class="card-header">🏆 Top Performing Products</div>
+      ${topProducts.length>0?`
+      <div style="padding:12px 0">
+        ${topProducts.map((ps,i)=>`
+          <div style="margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--text-primary)">#${i+1} ${ps.product.code}</div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">${ps.qty} ${ps.product.unit} sold • ${ps.count} bills</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:14px;font-weight:800;color:#34c759">₹${ps.revenue.toLocaleString()}</div>
+                <div style="font-size:11px;color:var(--text-secondary)">+₹${ps.profit.toLocaleString()}</div>
+              </div>
+            </div>
+            <div style="height:8px;background:rgba(52,199,89,0.15);border-radius:4px;overflow:hidden">
+              <div style="height:100%;background:linear-gradient(90deg,#34c759,#30d158);width:${(ps.revenue/maxRevenue*100).toFixed(1)}%;transition:width 0.5s"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      `:`
+      <div style="padding:30px 20px;text-align:center">
+        <div style="font-size:50px;margin-bottom:12px">📦</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:6px">No Product Sales Yet</div>
+        <div style="font-size:13px;color:var(--text-secondary)">Create bills to see product performance</div>
+      </div>
+      `}
+    </div>
+    
+    <!-- Worst Performing Products (SHOW IF DATA EXISTS) -->
+    ${worstProducts.length>0&&productStats.length>5?`
+    <div class="card slide-up" style="animation-delay:0.35s">
+      <div class="card-header">📉 Low Performing Products</div>
+      <div style="padding:12px 0">
+        ${worstProducts.map((ps,i)=>`
+          <div style="margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--text-primary)">${ps.product.code}</div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">${ps.qty} ${ps.product.unit} sold • ${ps.count} bills</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:14px;font-weight:800;color:#ff9500">₹${ps.revenue.toLocaleString()}</div>
+                <div style="font-size:11px;color:var(--text-secondary)">+₹${ps.profit.toLocaleString()}</div>
+              </div>
+            </div>
+            <div style="height:8px;background:rgba(255,149,0,0.15);border-radius:4px;overflow:hidden">
+              <div style="height:100%;background:linear-gradient(90deg,#ff9500,#ffb340);width:${(ps.revenue/maxRevenue*100).toFixed(1)}%;transition:width 0.5s"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    `:''}
+    
+    <!-- Top Customers by Revenue (ALWAYS SHOW) -->
+    <div class="card slide-up" style="animation-delay:0.4s">
+      <div class="card-header">💎 Top Customers by Revenue</div>
+      ${topCustomers.length>0?`
+      <div style="padding:12px 0">
+        ${topCustomers.map((cs,i)=>`
+          <div style="margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--text-primary)">#${i+1} ${cs.customer.name}</div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">${cs.bills} bills • Pending: ₹${cs.pending.toLocaleString()}</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:14px;font-weight:800;color:#007aff">₹${cs.revenue.toLocaleString()}</div>
+              </div>
+            </div>
+            <div style="height:8px;background:rgba(0,122,255,0.15);border-radius:4px;overflow:hidden">
+              <div style="height:100%;background:linear-gradient(90deg,#007aff,#0a84ff);width:${(cs.revenue/maxCustomerRev*100).toFixed(1)}%;transition:width 0.5s"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      `:`
+      <div style="padding:30px 20px;text-align:center">
+        <div style="font-size:50px;margin-bottom:12px">👥</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:6px">No Customer Data Yet</div>
+        <div style="font-size:13px;color:var(--text-secondary)">Create bills for customers to see analytics</div>
+      </div>
+      `}
+    </div>
+    
+    <!-- Regular Customers (ALWAYS SHOW) -->
+    <div class="card slide-up" style="animation-delay:0.45s">
+      <div class="card-header">⭐ Most Regular Customers</div>
+      ${regularCustomers.length>0?`
+      <div style="padding:12px 0">
+        ${regularCustomers.map((cs,i)=>`
+          <div style="margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--text-primary)">#${i+1} ${cs.customer.name}</div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">Revenue: ₹${cs.revenue.toLocaleString()}</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:14px;font-weight:800;color:#bf5af2">${cs.bills} bills</div>
+              </div>
+            </div>
+            <div style="height:8px;background:rgba(191,90,242,0.15);border-radius:4px;overflow:hidden">
+              <div style="height:100%;background:linear-gradient(90deg,#bf5af2,#d46eff);width:${(cs.bills/maxBills*100).toFixed(1)}%;transition:width 0.5s"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      `:`
+      <div style="padding:30px 20px;text-align:center">
+        <div style="font-size:50px;margin-bottom:12px">⭐</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:6px">No Regular Customers Yet</div>
+        <div style="font-size:13px;color:var(--text-secondary)">Customer frequency data will appear here</div>
+      </div>
+      `}
+    </div>
+    
+    <!-- ⚠️ Bills Requiring Attention (MOVED TO BOTTOM) -->
+    <div class="card slide-up" style="animation-delay:0.5s;${pendingBills.length>0||partialBills.length>0?'border:2px solid #ff9500;background:rgba(255,149,0,0.05)':''}">
+      <div class="card-header" style="${pendingBills.length>0||partialBills.length>0?'color:#ff9500':''}">
+        ${pendingBills.length>0||partialBills.length>0?`⚠️ Bills Requiring Attention (${pendingBills.length+partialBills.length})`:'✅ No Pending Bills'}
+      </div>
+      ${pendingBills.length>0||partialBills.length>0?`
+      <div style="padding:8px 0">
+        ${[...pendingBills,...partialBills].slice(0,10).map(b=>{
+          const c=customers.find(x=>x.id===b.cid);
+          const rem=b.total-b.paid;
+          return `
+            <div style="padding:12px;margin-bottom:8px;background:rgba(255,149,0,0.08);border-radius:8px;border-left:4px solid ${b.status==='pending'?'#ff3b30':'#ff9500'}">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                <div>
+                  <div style="font-size:14px;font-weight:800;color:var(--text-primary)">Bill #${b.no||b.id}</div>
+                  <div style="font-size:11px;color:var(--text-secondary);margin-top:3px">${c?c.name:'Walk-in'} • ${new Date(b.date).toLocaleDateString('en-IN')}</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-size:15px;font-weight:900;color:#ff3b30">₹${rem.toLocaleString()}</div>
+                  <div style="font-size:10px;color:#ff3b30;margin-top:3px;text-transform:uppercase;font-weight:700">${b.status}</div>
+                </div>
+              </div>
+              <div style="height:6px;background:rgba(255,59,48,0.2);border-radius:3px;overflow:hidden;margin-top:8px">
+                <div style="height:100%;background:#ff3b30;width:${((b.total-b.paid)/b.total*100).toFixed(1)}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+        ${(pendingBills.length+partialBills.length)>10?`
+          <div style="text-align:center;padding:12px;color:var(--text-secondary);font-size:12px">
+            + ${(pendingBills.length+partialBills.length)-10} more bills requiring attention
+          </div>
+        `:''}
+      </div>
+      `:`
+      <div style="padding:20px;text-align:center">
+        <div style="font-size:40px;margin-bottom:12px">✅</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:6px">All Clear!</div>
+        <div style="font-size:13px;color:var(--text-secondary)">No pending or partial bills requiring attention</div>
+      </div>
+      `}
+    </div>
+  `;
+  
+  document.getElementById('page9').innerHTML=html;
+}
+
+function changeReportPeriod(period){
+  reportPeriod=period;
+  showReports();
+}
+
+function openScanner(){
+  showToast('Barcode scanner coming soon');
+}
+
+function showModal(html){
+  const m=document.createElement('div');
+  m.id='modal';
+  m.className='modal show';
+  m.innerHTML='<div class="modal-box">'+html+'</div>';
+  document.body.appendChild(m);
+}
+
+function closeModal(){
+  const m=document.getElementById('modal');
+  if(m)m.remove();
+}
+
+function showStaff(){
+  const staffList=users.filter(u=>u.role!=='admin');
+  const now=new Date();
+  const todayStr=now.toDateString();
+  const weekAgo=new Date(now-7*86400000);
+  const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
+
+  const stats=staffList.map(u=>{
+    const ub=bills.filter(b=>b.by===u.id);
+    const todayB=ub.filter(b=>new Date(b.date).toDateString()===todayStr);
+    const weekB=ub.filter(b=>new Date(b.date)>=weekAgo);
+    const monthB=ub.filter(b=>new Date(b.date)>=monthStart);
+    const totalSales=ub.reduce((s,b)=>s+b.total,0);
+    const todaySales=todayB.reduce((s,b)=>s+b.total,0);
+    const weekSales=weekB.reduce((s,b)=>s+b.total,0);
+    const profit=ub.reduce((s,b)=>s+b.total-(b.cost||0),0);
+    const score=weekB.length>=10?'high':weekB.length>=4?'medium':'low';
+    const pct=Math.min(100,Math.round((weekB.length/12)*100));
+    const lastBill=ub.length?new Date(Math.max(...ub.map(b=>new Date(b.date)))):null;
+    return{u,ub,todayB,weekB,monthB,totalSales,todaySales,weekSales,profit,score,pct,lastBill};
+  });
+
+  const topPerformer=stats.length?[...stats].sort((a,b)=>b.weekSales-a.weekSales)[0]:null;
+
+  let html=`
+    <div class="stats">
+      <div class="stat slide-up"><div class="stat-val">${staffList.length}</div><div class="stat-label">Staff Members</div></div>
+      <div class="stat success slide-up" style="animation-delay:0.05s"><div class="stat-val">${stats.reduce((s,x)=>s+x.todayB.length,0)}</div><div class="stat-label">Bills Today</div></div>
+      <div class="stat warning slide-up" style="animation-delay:0.1s"><div class="stat-val">₹${stats.reduce((s,x)=>s+x.todaySales,0).toLocaleString()}</div><div class="stat-label">Sales Today</div></div>
+      <div class="stat slide-up" style="animation-delay:0.15s"><div class="stat-val">${stats.reduce((s,x)=>s+x.weekB.length,0)}</div><div class="stat-label">Bills This Week</div></div>
+    </div>`;
+
+  if(topPerformer&&topPerformer.weekSales>0){
+    html+=`<div class="highlight-box slide-down" style="margin-bottom:18px">
+      <div style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;margin-bottom:6px">🏆 Top Performer — This Week</div>
+      <div style="font-size:22px;font-weight:900">${topPerformer.u.name}</div>
+      <div style="font-size:14px;margin-top:8px;opacity:0.9">${topPerformer.weekB.length} bills &nbsp;•&nbsp; ₹${topPerformer.weekSales.toLocaleString()} sales</div>
+    </div>`;
+  }
+
+  html+=`<button class="btn" onclick="openNewUser()">+ Add Staff Member</button>`;
+
+  if(!stats.length){
+    html+=`<div class="empty-state"><div class="icon">👥</div><div class="title">No Staff Yet</div><div class="desc">Add users with Staff or Manager role</div></div>`;
+  }else{
+    html+=stats.map(({u,ub,todayB,weekB,monthB,totalSales,todaySales,weekSales,profit,score,pct,lastBill})=>{
+      const initials=u.name.split(' ').map(n=>n[0]).join('').substring(0,2);
+      const scoreColor=score==='high'?'#34c759':score==='medium'?'#ff9500':'#ff3b30';
+      const scoreLabel=score==='high'?'🔥 High':score==='medium'?'⚡ Medium':'❄️ Low';
+      return`<div class="staff-card perf-${score} slide-up">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,${scoreColor},${scoreColor}99);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">${initials}</div>
+            <div>
+              <div style="font-weight:900;font-size:17px;letter-spacing:-0.3px">${u.name}</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:3px">@${u.username} &nbsp;•&nbsp; <span class="badge ${u.role}" style="font-size:10px;padding:3px 10px">${u.role}</span></div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${scoreColor}">${scoreLabel}</div>
+            <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">${lastBill?'Last: '+lastBill.toLocaleDateString('en-IN'):'No bills yet'}</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px">
+          <div class="staff-stat-box">
+            <div style="font-size:22px;font-weight:900;color:#007aff">${todayB.length}</div>
+            <div style="font-size:10px;color:var(--text-secondary);text-transform:uppercase;font-weight:700;margin-top:3px">Today</div>
+            <div style="font-size:11px;color:#34c759;font-weight:700;margin-top:2px">₹${todaySales.toLocaleString()}</div>
+          </div>
+          <div class="staff-stat-box">
+            <div style="font-size:22px;font-weight:900;color:#00c7ff">${weekB.length}</div>
+            <div style="font-size:10px;color:var(--text-secondary);text-transform:uppercase;font-weight:700;margin-top:3px">Week</div>
+            <div style="font-size:11px;color:#34c759;font-weight:700;margin-top:2px">₹${weekSales.toLocaleString()}</div>
+          </div>
+          <div class="staff-stat-box">
+            <div style="font-size:22px;font-weight:900;color:#bf5af2">${monthB.length}</div>
+            <div style="font-size:10px;color:var(--text-secondary);text-transform:uppercase;font-weight:700;margin-top:3px">Month</div>
+            <div style="font-size:11px;color:#34c759;font-weight:700;margin-top:2px">₹${monthB.reduce((s,b)=>s+b.total,0).toLocaleString()}</div>
+          </div>
+          <div class="staff-stat-box">
+            <div style="font-size:22px;font-weight:900;color:#34c759">${ub.length}</div>
+            <div style="font-size:10px;color:var(--text-secondary);text-transform:uppercase;font-weight:700;margin-top:3px">Total</div>
+            <div style="font-size:11px;color:#34c759;font-weight:700;margin-top:2px">₹${totalSales.toLocaleString()}</div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-bottom:5px">
+          <span>Weekly Performance</span><span style="font-weight:800;color:${scoreColor}">${pct}%</span>
+        </div>
+        <div class="perf-bar-bg"><div class="perf-bar-fill perf-${score}" style="width:${pct}%"></div></div>
+
+        <div style="display:flex;gap:8px;margin-top:14px">
+          <button class="btn btn-sm btn-view" style="flex:1;margin:0" onclick="viewStaffBills(${u.id})">View Bills</button>
+          <button class="btn btn-sm btn-warning" style="flex:1;margin:0" onclick="viewStaffReport(${u.id})">Full Report</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('page8').innerHTML=html;
+}
+
+function viewStaffBills(uid){
+  const u=users.find(x=>x.id===uid);
+  const myBills=bills.filter(b=>b.by===uid).slice().reverse();
+  showModal(`
+    <div class="modal-head"><div class="modal-title">Bills by ${u.name}</div><div class="close" onclick="closeModal()">&times;</div></div>
+    <div style="max-height:65vh;overflow-y:auto">
+      ${!myBills.length?`<div class="empty-state"><div class="icon">📋</div><div class="title">No Bills Yet</div></div>`:
+        myBills.map(b=>{
+          const c=customers.find(x=>x.id===b.cid);
+          return`<div class="item" style="margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:800;color:#007aff">Bill #${b.no||b.id}</div>
+                <div style="font-size:12px;color:var(--text-secondary)">${new Date(b.date).toLocaleDateString('en-IN')} &nbsp;•&nbsp; ${c?c.name:'Walk-in'}</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-weight:900;font-size:15px">₹${b.total.toLocaleString()}</div>
+                <span class="badge ${b.status}" style="font-size:10px">${b.status}</span>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+    </div>
+    <button class="btn btn-sm btn-outline" style="margin-top:12px" onclick="closeModal()">Close</button>`);
+}
+
+function viewStaffReport(uid){
+  const u=users.find(x=>x.id===uid);
+  const ub=bills.filter(b=>b.by===uid);
+  const now=new Date();
+  const periods=[
+    {label:'Today',bills:ub.filter(b=>new Date(b.date).toDateString()===now.toDateString())},
+    {label:'This Week',bills:ub.filter(b=>new Date(b.date)>=new Date(now-7*86400000))},
+    {label:'This Month',bills:ub.filter(b=>new Date(b.date)>=new Date(now.getFullYear(),now.getMonth(),1))},
+    {label:'All Time',bills:ub}
+  ];
+  showModal(`
+    <div class="modal-head"><div class="modal-title">📊 ${u.name} — Report</div><div class="close" onclick="closeModal()">&times;</div></div>
+    <div style="max-height:70vh;overflow-y:auto">
+      ${periods.map(p=>{
+        const tot=p.bills.reduce((s,b)=>s+b.total,0);
+        const prof=p.bills.reduce((s,b)=>s+b.total-(b.cost||0),0);
+        const paid=p.bills.reduce((s,b)=>s+b.paid,0);
+        return`<div class="card" style="margin-bottom:14px">
+          <div class="card-header">${p.label}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="background:rgba(0,122,255,0.08);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:22px;font-weight:900;color:#007aff">${p.bills.length}</div>
+              <div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;font-weight:700;margin-top:3px">Bills</div>
+            </div>
+            <div style="background:rgba(52,199,89,0.08);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:22px;font-weight:900;color:#34c759">₹${tot.toLocaleString()}</div>
+              <div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;font-weight:700;margin-top:3px">Sales</div>
+            </div>
+            <div style="background:rgba(191,90,242,0.08);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:22px;font-weight:900;color:#bf5af2">₹${prof.toLocaleString()}</div>
+              <div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;font-weight:700;margin-top:3px">Profit</div>
+            </div>
+            <div style="background:rgba(255,149,0,0.08);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:22px;font-weight:900;color:#ff9500">₹${(tot-paid).toLocaleString()}</div>
+              <div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;font-weight:700;margin-top:3px">Pending</div>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    <button class="btn btn-sm btn-outline" style="margin-top:12px" onclick="closeModal()">Close</button>`);
+}
+
+// Initialize app
+(async function init(){
+  try {
+    await load();
+    console.log('🚀 App initialized. User:', user ? user.name : 'Not logged in');
+    console.log('📊 Data loaded - Bills:', bills.length, 'Products:', products.length);
+
+    if(user){
+      console.log('✅ Auto-login successful:', user.name, '('+user.role+')');
+      showMain();
+    }else{
+      console.log('⚠️ No saved user found, showing login screen');
+      showLogin();
+    }
+  } catch(error) {
+    console.error('❌ Initialization error:', error);
+    // Show login screen even if load fails
+    showLogin();
+  }
+})();
+</script>
+</body>
+</html>
